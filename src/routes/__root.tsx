@@ -4,11 +4,16 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { I18nProvider } from "@/lib/i18n";
+import { TopNav } from "@/components/TopNav";
+import { BottomTabBar } from "@/components/BottomTabBar";
+import { Footer } from "@/components/Footer";
 
 function NotFoundComponent() {
   return (
@@ -72,14 +77,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Speakeasy India — Honest sexual wellness education" },
+      { name: "description", content: "Trust-first, medically-reviewed sexual wellness education for India. Bilingual, anonymous, judgement-free." },
+      { name: "author", content: "Speakeasy India" },
+      { property: "og:title", content: "Speakeasy India" },
+      { property: "og:description", content: "Trust-first sexual wellness education for India." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -110,10 +114,25 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const isAdmin = path.startsWith("/admin");
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <I18nProvider>
+        {isAdmin ? (
+          <Outlet />
+        ) : (
+          <div className="min-h-screen flex flex-col">
+            <TopNav />
+            <main className="flex-1 pb-20 md:pb-0">
+              <Outlet />
+            </main>
+            <Footer />
+            <BottomTabBar />
+          </div>
+        )}
+      </I18nProvider>
     </QueryClientProvider>
   );
 }
