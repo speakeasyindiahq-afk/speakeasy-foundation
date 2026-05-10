@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as QaRouteImport } from './routes/qa'
 import { Route as LearnRouteImport } from './routes/learn'
+import { Route as AudioRouteImport } from './routes/audio'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -22,6 +23,11 @@ const QaRoute = QaRouteImport.update({
 const LearnRoute = LearnRouteImport.update({
   id: '/learn',
   path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AudioRoute = AudioRouteImport.update({
+  id: '/audio',
+  path: '/audio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -38,12 +44,14 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/audio': typeof AudioRoute
   '/learn': typeof LearnRoute
   '/qa': typeof QaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/audio': typeof AudioRoute
   '/learn': typeof LearnRoute
   '/qa': typeof QaRoute
 }
@@ -51,20 +59,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/audio': typeof AudioRoute
   '/learn': typeof LearnRoute
   '/qa': typeof QaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/learn' | '/qa'
+  fullPaths: '/' | '/admin' | '/audio' | '/learn' | '/qa'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/learn' | '/qa'
-  id: '__root__' | '/' | '/admin' | '/learn' | '/qa'
+  to: '/' | '/admin' | '/audio' | '/learn' | '/qa'
+  id: '__root__' | '/' | '/admin' | '/audio' | '/learn' | '/qa'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  AudioRoute: typeof AudioRoute
   LearnRoute: typeof LearnRoute
   QaRoute: typeof QaRoute
 }
@@ -83,6 +93,13 @@ declare module '@tanstack/react-router' {
       path: '/learn'
       fullPath: '/learn'
       preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audio': {
+      id: '/audio'
+      path: '/audio'
+      fullPath: '/audio'
+      preLoaderRoute: typeof AudioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -105,6 +122,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  AudioRoute: AudioRoute,
   LearnRoute: LearnRoute,
   QaRoute: QaRoute,
 }
