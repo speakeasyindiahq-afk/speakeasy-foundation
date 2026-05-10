@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as QaRouteImport } from './routes/qa'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as AudioRouteImport } from './routes/audio'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QaRoute = QaRouteImport.update({
   id: '/qa',
   path: '/qa',
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/audio': typeof AudioRoute
   '/learn': typeof LearnRoute
   '/qa': typeof QaRoute
+  '/search': typeof SearchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/audio': typeof AudioRoute
   '/learn': typeof LearnRoute
   '/qa': typeof QaRoute
+  '/search': typeof SearchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,14 @@ export interface FileRoutesById {
   '/audio': typeof AudioRoute
   '/learn': typeof LearnRoute
   '/qa': typeof QaRoute
+  '/search': typeof SearchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/audio' | '/learn' | '/qa'
+  fullPaths: '/' | '/admin' | '/audio' | '/learn' | '/qa' | '/search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/audio' | '/learn' | '/qa'
-  id: '__root__' | '/' | '/admin' | '/audio' | '/learn' | '/qa'
+  to: '/' | '/admin' | '/audio' | '/learn' | '/qa' | '/search'
+  id: '__root__' | '/' | '/admin' | '/audio' | '/learn' | '/qa' | '/search'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,10 +86,18 @@ export interface RootRouteChildren {
   AudioRoute: typeof AudioRoute
   LearnRoute: typeof LearnRoute
   QaRoute: typeof QaRoute
+  SearchRoute: typeof SearchRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/qa': {
       id: '/qa'
       path: '/qa'
@@ -125,6 +142,7 @@ const rootRouteChildren: RootRouteChildren = {
   AudioRoute: AudioRoute,
   LearnRoute: LearnRoute,
   QaRoute: QaRoute,
+  SearchRoute: SearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
