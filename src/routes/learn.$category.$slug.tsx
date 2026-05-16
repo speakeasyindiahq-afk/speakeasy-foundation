@@ -196,7 +196,7 @@ function ArticlePage() {
         <section className="mx-auto max-w-[680px] px-5 py-6">
           <h2 className="text-base font-semibold uppercase tracking-wider text-muted-foreground">{t("article.sources")}</h2>
           <ol className="mt-3 space-y-2 text-sm">
-            {article.sources.map((s, i) => (
+            {(article.sources as { title: string; url: string }[]).map((s, i) => (
               <li key={i}>
                 <a href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-start gap-1 text-foreground hover:text-primary">
                   <span className="text-muted-foreground">{i + 1}.</span>
