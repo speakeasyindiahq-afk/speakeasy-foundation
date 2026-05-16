@@ -22,6 +22,7 @@ import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminHomepageRouteImport } from './routes/admin.homepage'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 import { Route as LearnCategorySlugRouteImport } from './routes/learn.$category.$slug'
+import { Route as AdminContentMythsRouteImport } from './routes/admin.content.myths'
 import { Route as AdminContentArticlesRouteImport } from './routes/admin.content.articles'
 
 const SearchRoute = SearchRouteImport.update({
@@ -89,6 +90,11 @@ const LearnCategorySlugRoute = LearnCategorySlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => LearnCategoryRoute,
 } as any)
+const AdminContentMythsRoute = AdminContentMythsRouteImport.update({
+  id: '/content/myths',
+  path: '/content/myths',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminContentArticlesRoute = AdminContentArticlesRouteImport.update({
   id: '/content/articles',
   path: '/content/articles',
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
+  '/admin/content/myths': typeof AdminContentMythsRoute
   '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
 export interface FileRoutesByTo {
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
+  '/admin/content/myths': typeof AdminContentMythsRoute
   '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
 export interface FileRoutesById {
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
+  '/admin/content/myths': typeof AdminContentMythsRoute
   '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
 export interface FileRouteTypes {
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/learn/$category'
     | '/myth/$slug'
     | '/admin/content/articles'
+    | '/admin/content/myths'
     | '/learn/$category/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/learn/$category'
     | '/myth/$slug'
     | '/admin/content/articles'
+    | '/admin/content/myths'
     | '/learn/$category/$slug'
   id:
     | '__root__'
@@ -192,6 +203,7 @@ export interface FileRouteTypes {
     | '/learn/$category'
     | '/myth/$slug'
     | '/admin/content/articles'
+    | '/admin/content/myths'
     | '/learn/$category/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -298,6 +310,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnCategorySlugRouteImport
       parentRoute: typeof LearnCategoryRoute
     }
+    '/admin/content/myths': {
+      id: '/admin/content/myths'
+      path: '/content/myths'
+      fullPath: '/admin/content/myths'
+      preLoaderRoute: typeof AdminContentMythsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/content/articles': {
       id: '/admin/content/articles'
       path: '/content/articles'
@@ -313,6 +332,7 @@ interface AdminRouteChildren {
   AdminHomepageRoute: typeof AdminHomepageRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminContentArticlesRoute: typeof AdminContentArticlesRoute
+  AdminContentMythsRoute: typeof AdminContentMythsRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -320,6 +340,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminHomepageRoute: AdminHomepageRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminContentArticlesRoute: AdminContentArticlesRoute,
+  AdminContentMythsRoute: AdminContentMythsRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
