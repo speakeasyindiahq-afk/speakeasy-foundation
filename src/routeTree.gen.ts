@@ -16,6 +16,7 @@ import { Route as LearnRouteImport } from './routes/learn'
 import { Route as AudioRouteImport } from './routes/audio'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MythSlugRouteImport } from './routes/myth.$slug'
 import { Route as LearnCategoryRouteImport } from './routes/learn.$category'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminHomepageRouteImport } from './routes/admin.homepage'
@@ -58,6 +59,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MythSlugRoute = MythSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => MythRoute,
+} as any)
 const LearnCategoryRoute = LearnCategoryRouteImport.update({
   id: '/$category',
   path: '/$category',
@@ -94,13 +100,14 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRoute
   '/learn': typeof LearnRouteWithChildren
-  '/myth': typeof MythRoute
+  '/myth': typeof MythRouteWithChildren
   '/qa': typeof QaRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
+  '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
   '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
@@ -109,13 +116,14 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRoute
   '/learn': typeof LearnRouteWithChildren
-  '/myth': typeof MythRoute
+  '/myth': typeof MythRouteWithChildren
   '/qa': typeof QaRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
+  '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
   '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
@@ -125,13 +133,14 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRoute
   '/learn': typeof LearnRouteWithChildren
-  '/myth': typeof MythRoute
+  '/myth': typeof MythRouteWithChildren
   '/qa': typeof QaRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
+  '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
   '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
     | '/admin/homepage'
     | '/admin/login'
     | '/learn/$category'
+    | '/myth/$slug'
     | '/admin/content/articles'
     | '/learn/$category/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
     | '/admin/homepage'
     | '/admin/login'
     | '/learn/$category'
+    | '/myth/$slug'
     | '/admin/content/articles'
     | '/learn/$category/$slug'
   id:
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '/admin/homepage'
     | '/admin/login'
     | '/learn/$category'
+    | '/myth/$slug'
     | '/admin/content/articles'
     | '/learn/$category/$slug'
   fileRoutesById: FileRoutesById
@@ -188,7 +200,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AudioRoute: typeof AudioRoute
   LearnRoute: typeof LearnRouteWithChildren
-  MythRoute: typeof MythRoute
+  MythRoute: typeof MythRouteWithChildren
   QaRoute: typeof QaRoute
   SearchRoute: typeof SearchRoute
 }
@@ -243,6 +255,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/myth/$slug': {
+      id: '/myth/$slug'
+      path: '/$slug'
+      fullPath: '/myth/$slug'
+      preLoaderRoute: typeof MythSlugRouteImport
+      parentRoute: typeof MythRoute
     }
     '/learn/$category': {
       id: '/learn/$category'
@@ -327,12 +346,22 @@ const LearnRouteChildren: LearnRouteChildren = {
 
 const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
 
+interface MythRouteChildren {
+  MythSlugRoute: typeof MythSlugRoute
+}
+
+const MythRouteChildren: MythRouteChildren = {
+  MythSlugRoute: MythSlugRoute,
+}
+
+const MythRouteWithChildren = MythRoute._addFileChildren(MythRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AudioRoute: AudioRoute,
   LearnRoute: LearnRouteWithChildren,
-  MythRoute: MythRoute,
+  MythRoute: MythRouteWithChildren,
   QaRoute: QaRoute,
   SearchRoute: SearchRoute,
 }
