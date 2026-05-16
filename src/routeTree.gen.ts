@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as QaRouteImport } from './routes/qa'
+import { Route as MythRouteImport } from './routes/myth'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as AudioRouteImport } from './routes/audio'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -30,6 +31,11 @@ const SearchRoute = SearchRouteImport.update({
 const QaRoute = QaRouteImport.update({
   id: '/qa',
   path: '/qa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MythRoute = MythRouteImport.update({
+  id: '/myth',
+  path: '/myth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnRoute = LearnRouteImport.update({
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRoute
   '/learn': typeof LearnRouteWithChildren
+  '/myth': typeof MythRoute
   '/qa': typeof QaRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRoute
   '/learn': typeof LearnRouteWithChildren
+  '/myth': typeof MythRoute
   '/qa': typeof QaRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRoute
   '/learn': typeof LearnRouteWithChildren
+  '/myth': typeof MythRoute
   '/qa': typeof QaRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/audio'
     | '/learn'
+    | '/myth'
     | '/qa'
     | '/search'
     | '/admin/dashboard'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/audio'
     | '/learn'
+    | '/myth'
     | '/qa'
     | '/search'
     | '/admin/dashboard'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/audio'
     | '/learn'
+    | '/myth'
     | '/qa'
     | '/search'
     | '/admin/dashboard'
@@ -176,6 +188,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AudioRoute: typeof AudioRoute
   LearnRoute: typeof LearnRouteWithChildren
+  MythRoute: typeof MythRoute
   QaRoute: typeof QaRoute
   SearchRoute: typeof SearchRoute
 }
@@ -194,6 +207,13 @@ declare module '@tanstack/react-router' {
       path: '/qa'
       fullPath: '/qa'
       preLoaderRoute: typeof QaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/myth': {
+      id: '/myth'
+      path: '/myth'
+      fullPath: '/myth'
+      preLoaderRoute: typeof MythRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn': {
@@ -312,9 +332,20 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AudioRoute: AudioRoute,
   LearnRoute: LearnRouteWithChildren,
+  MythRoute: MythRoute,
   QaRoute: QaRoute,
   SearchRoute: SearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
