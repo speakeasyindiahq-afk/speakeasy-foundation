@@ -107,7 +107,7 @@ function AdminHomepage() {
           <select value={mythId ?? ""} onChange={(e) => setMythId(e.target.value || null)} className="ta">
             <option value="">— Auto (latest published) —</option>
             {myths.map((m) => (
-              <option key={m.id} value={m.id}>{m.myth.slice(0, 80)}</option>
+              <option key={m.id} value={m.id}>{(m.myth_statement_en ?? m.myth ?? "").slice(0, 80)}</option>
             ))}
           </select>
         </Field>
