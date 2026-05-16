@@ -134,6 +134,20 @@ export const dict: Dict = {
     hi: "यह लेख संवेदनशील विषयों पर चर्चा करता है। आप जारी रख सकते हैं या रुक सकते हैं — चुनाव आपका है।",
   },
   "article.notfound": { en: "Article not found.", hi: "लेख नहीं मिला।" },
+
+  "myth.hub.title": { en: "Myth Ya Sach?", hi: "मिथक या सच?" },
+  "myth.hub.subtitle": {
+    en: "Common myths corrected by clinicians and educators. Share the truth.",
+    hi: "चिकित्सकों व शिक्षकों द्वारा सुधारी गई आम भ्रांतियाँ। सच फैलाओ।",
+  },
+  "myth.label.myth": { en: "MYTH", hi: "भ्रांति" },
+  "myth.label.truth": { en: "TRUTH", hi: "सच" },
+  "myth.readFull": { en: "Read the full truth →", hi: "पूरी बात पढ़ें →" },
+  "myth.empty": { en: "No myths yet in this category.", hi: "इस श्रेणी में अभी कोई भ्रांति नहीं है।" },
+  "myth.share.wa": { en: "Share on WhatsApp", hi: "व्हाट्सऐप पर साझा करें" },
+  "myth.related": { en: "Related myths", hi: "संबंधित भ्रांतियाँ" },
+  "myth.breadcrumb": { en: "Myths", hi: "भ्रांतियाँ" },
+  "myth.notfound": { en: "Myth not found.", hi: "भ्रांति नहीं मिली।" },
 };
 
 const Ctx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (k: keyof typeof dict) => string }>({
