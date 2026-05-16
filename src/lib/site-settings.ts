@@ -40,8 +40,20 @@ export type Article = {
   experts?: Expert | null;
 };
 export type Myth = {
-  id: string; myth: string; myth_hi?: string | null; fact: string; fact_hi?: string | null;
+  id: string;
+  slug?: string | null;
+  category?: string | null;
+  myth?: string | null; myth_hi?: string | null;
+  fact?: string | null; fact_hi?: string | null;
+  myth_statement_en?: string | null; myth_statement_hi?: string | null;
+  truth_statement_en?: string | null; truth_statement_hi?: string | null;
+  explanation_en?: string | null; explanation_hi?: string | null;
+  expert_id?: string | null;
+  seo_title_en?: string | null; seo_title_hi?: string | null;
+  seo_description_en?: string | null; seo_description_hi?: string | null;
+  status?: string | null;
   created_at: string;
+  experts?: Expert | null;
 };
 export type AudioEpisode = {
   id: string; title: string; title_hi?: string | null; description?: string | null;
