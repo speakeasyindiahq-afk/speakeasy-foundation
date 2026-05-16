@@ -20,6 +20,7 @@ import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminHomepageRouteImport } from './routes/admin.homepage'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 import { Route as LearnCategorySlugRouteImport } from './routes/learn.$category.$slug'
+import { Route as AdminContentArticlesRouteImport } from './routes/admin.content.articles'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -76,6 +77,11 @@ const LearnCategorySlugRoute = LearnCategorySlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => LearnCategoryRoute,
 } as any)
+const AdminContentArticlesRoute = AdminContentArticlesRouteImport.update({
+  id: '/content/articles',
+  path: '/content/articles',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
+  '/admin/content/articles': typeof AdminContentArticlesRoute
   '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
 export interface FileRoutesByTo {
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
+  '/admin/content/articles': typeof AdminContentArticlesRoute
   '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
 export interface FileRoutesById {
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
+  '/admin/content/articles': typeof AdminContentArticlesRoute
   '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
 export interface FileRouteTypes {
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
     | '/admin/homepage'
     | '/admin/login'
     | '/learn/$category'
+    | '/admin/content/articles'
     | '/learn/$category/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/admin/homepage'
     | '/admin/login'
     | '/learn/$category'
+    | '/admin/content/articles'
     | '/learn/$category/$slug'
   id:
     | '__root__'
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/admin/homepage'
     | '/admin/login'
     | '/learn/$category'
+    | '/admin/content/articles'
     | '/learn/$category/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -247,6 +259,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnCategorySlugRouteImport
       parentRoute: typeof LearnCategoryRoute
     }
+    '/admin/content/articles': {
+      id: '/admin/content/articles'
+      path: '/content/articles'
+      fullPath: '/admin/content/articles'
+      preLoaderRoute: typeof AdminContentArticlesRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
@@ -254,12 +273,14 @@ interface AdminRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminHomepageRoute: typeof AdminHomepageRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminContentArticlesRoute: typeof AdminContentArticlesRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
   AdminHomepageRoute: AdminHomepageRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminContentArticlesRoute: AdminContentArticlesRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
@@ -297,3 +318,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
