@@ -19,6 +19,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MythSlugRouteImport } from './routes/myth.$slug'
 import { Route as LearnCategoryRouteImport } from './routes/learn.$category'
+import { Route as AdminQaRouteImport } from './routes/admin.qa'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminHomepageRouteImport } from './routes/admin.homepage'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
@@ -76,6 +77,11 @@ const LearnCategoryRoute = LearnCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => LearnRoute,
 } as any)
+const AdminQaRoute = AdminQaRouteImport.update({
+  id: '/qa',
+  path: '/qa',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/qa': typeof AdminQaRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/qa': typeof AdminQaRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/qa': typeof AdminQaRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
+    | '/admin/qa'
     | '/learn/$category'
     | '/myth/$slug'
     | '/admin/content/articles'
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
+    | '/admin/qa'
     | '/learn/$category'
     | '/myth/$slug'
     | '/admin/content/articles'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
+    | '/admin/qa'
     | '/learn/$category'
     | '/myth/$slug'
     | '/admin/content/articles'
@@ -302,6 +314,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnCategoryRouteImport
       parentRoute: typeof LearnRoute
     }
+    '/admin/qa': {
+      id: '/admin/qa'
+      path: '/qa'
+      fullPath: '/admin/qa'
+      preLoaderRoute: typeof AdminQaRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
@@ -351,6 +370,7 @@ interface AdminRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminHomepageRoute: typeof AdminHomepageRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminQaRoute: typeof AdminQaRoute
   AdminContentArticlesRoute: typeof AdminContentArticlesRoute
   AdminContentMythsRoute: typeof AdminContentMythsRoute
 }
@@ -359,6 +379,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
   AdminHomepageRoute: AdminHomepageRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminQaRoute: AdminQaRoute,
   AdminContentArticlesRoute: AdminContentArticlesRoute,
   AdminContentMythsRoute: AdminContentMythsRoute,
 }
