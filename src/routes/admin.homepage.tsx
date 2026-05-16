@@ -58,7 +58,7 @@ function AdminHomepage() {
         upsertSetting("myth_of_week_id", mythId),
       ]);
       setMsg("Saved.");
-    } catch (e) {
+    } catch {
       setMsg("Save failed. Check Supabase setup.");
     } finally {
       setSaving(false);
