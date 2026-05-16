@@ -15,7 +15,7 @@ const sections = [
   { to: "/admin/content/myths", label: "Myths", icon: AlertCircle },
   { to: "/admin/dashboard", label: "Content", icon: FileText },
   { to: "/admin/dashboard", label: "Audio", icon: Headphones },
-  { to: "/admin/dashboard", label: "Q&A", icon: MessageSquare },
+  { to: "/admin/qa", label: "Q&A", icon: MessageSquare },
   { to: "/admin/dashboard", label: "SEO", icon: Search },
   { to: "/admin/dashboard", label: "Trust", icon: Shield },
   { to: "/admin/dashboard", label: "Settings", icon: Settings },

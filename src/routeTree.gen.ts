@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as SawalJawabRouteImport } from './routes/sawal-jawab'
 import { Route as QaRouteImport } from './routes/qa'
 import { Route as MythRouteImport } from './routes/myth'
 import { Route as LearnRouteImport } from './routes/learn'
@@ -18,6 +19,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MythSlugRouteImport } from './routes/myth.$slug'
 import { Route as LearnCategoryRouteImport } from './routes/learn.$category'
+import { Route as AdminQaRouteImport } from './routes/admin.qa'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminHomepageRouteImport } from './routes/admin.homepage'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
@@ -28,6 +30,11 @@ import { Route as AdminContentArticlesRouteImport } from './routes/admin.content
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SawalJawabRoute = SawalJawabRouteImport.update({
+  id: '/sawal-jawab',
+  path: '/sawal-jawab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QaRoute = QaRouteImport.update({
@@ -70,6 +77,11 @@ const LearnCategoryRoute = LearnCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => LearnRoute,
 } as any)
+const AdminQaRoute = AdminQaRouteImport.update({
+  id: '/qa',
+  path: '/qa',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -108,10 +120,12 @@ export interface FileRoutesByFullPath {
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
   '/qa': typeof QaRoute
+  '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/qa': typeof AdminQaRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
@@ -125,10 +139,12 @@ export interface FileRoutesByTo {
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
   '/qa': typeof QaRoute
+  '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/qa': typeof AdminQaRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
@@ -143,10 +159,12 @@ export interface FileRoutesById {
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
   '/qa': typeof QaRoute
+  '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/qa': typeof AdminQaRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
@@ -162,10 +180,12 @@ export interface FileRouteTypes {
     | '/learn'
     | '/myth'
     | '/qa'
+    | '/sawal-jawab'
     | '/search'
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
+    | '/admin/qa'
     | '/learn/$category'
     | '/myth/$slug'
     | '/admin/content/articles'
@@ -179,10 +199,12 @@ export interface FileRouteTypes {
     | '/learn'
     | '/myth'
     | '/qa'
+    | '/sawal-jawab'
     | '/search'
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
+    | '/admin/qa'
     | '/learn/$category'
     | '/myth/$slug'
     | '/admin/content/articles'
@@ -196,10 +218,12 @@ export interface FileRouteTypes {
     | '/learn'
     | '/myth'
     | '/qa'
+    | '/sawal-jawab'
     | '/search'
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
+    | '/admin/qa'
     | '/learn/$category'
     | '/myth/$slug'
     | '/admin/content/articles'
@@ -214,6 +238,7 @@ export interface RootRouteChildren {
   LearnRoute: typeof LearnRouteWithChildren
   MythRoute: typeof MythRouteWithChildren
   QaRoute: typeof QaRoute
+  SawalJawabRoute: typeof SawalJawabRoute
   SearchRoute: typeof SearchRoute
 }
 
@@ -224,6 +249,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sawal-jawab': {
+      id: '/sawal-jawab'
+      path: '/sawal-jawab'
+      fullPath: '/sawal-jawab'
+      preLoaderRoute: typeof SawalJawabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/qa': {
@@ -282,6 +314,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnCategoryRouteImport
       parentRoute: typeof LearnRoute
     }
+    '/admin/qa': {
+      id: '/admin/qa'
+      path: '/qa'
+      fullPath: '/admin/qa'
+      preLoaderRoute: typeof AdminQaRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
@@ -331,6 +370,7 @@ interface AdminRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminHomepageRoute: typeof AdminHomepageRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminQaRoute: typeof AdminQaRoute
   AdminContentArticlesRoute: typeof AdminContentArticlesRoute
   AdminContentMythsRoute: typeof AdminContentMythsRoute
 }
@@ -339,6 +379,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
   AdminHomepageRoute: AdminHomepageRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminQaRoute: AdminQaRoute,
   AdminContentArticlesRoute: AdminContentArticlesRoute,
   AdminContentMythsRoute: AdminContentMythsRoute,
 }
@@ -384,6 +425,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearnRoute: LearnRouteWithChildren,
   MythRoute: MythRouteWithChildren,
   QaRoute: QaRoute,
+  SawalJawabRoute: SawalJawabRoute,
   SearchRoute: SearchRoute,
 }
 export const routeTree = rootRouteImport
