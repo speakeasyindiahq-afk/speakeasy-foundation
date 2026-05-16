@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as SawalJawabRouteImport } from './routes/sawal-jawab'
 import { Route as QaRouteImport } from './routes/qa'
 import { Route as MythRouteImport } from './routes/myth'
 import { Route as LearnRouteImport } from './routes/learn'
@@ -28,6 +29,11 @@ import { Route as AdminContentArticlesRouteImport } from './routes/admin.content
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SawalJawabRoute = SawalJawabRouteImport.update({
+  id: '/sawal-jawab',
+  path: '/sawal-jawab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QaRoute = QaRouteImport.update({
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
   '/qa': typeof QaRoute
+  '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
   '/qa': typeof QaRoute
+  '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
   '/qa': typeof QaRoute
+  '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
     | '/learn'
     | '/myth'
     | '/qa'
+    | '/sawal-jawab'
     | '/search'
     | '/admin/dashboard'
     | '/admin/homepage'
@@ -179,6 +189,7 @@ export interface FileRouteTypes {
     | '/learn'
     | '/myth'
     | '/qa'
+    | '/sawal-jawab'
     | '/search'
     | '/admin/dashboard'
     | '/admin/homepage'
@@ -196,6 +207,7 @@ export interface FileRouteTypes {
     | '/learn'
     | '/myth'
     | '/qa'
+    | '/sawal-jawab'
     | '/search'
     | '/admin/dashboard'
     | '/admin/homepage'
@@ -214,6 +226,7 @@ export interface RootRouteChildren {
   LearnRoute: typeof LearnRouteWithChildren
   MythRoute: typeof MythRouteWithChildren
   QaRoute: typeof QaRoute
+  SawalJawabRoute: typeof SawalJawabRoute
   SearchRoute: typeof SearchRoute
 }
 
@@ -224,6 +237,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sawal-jawab': {
+      id: '/sawal-jawab'
+      path: '/sawal-jawab'
+      fullPath: '/sawal-jawab'
+      preLoaderRoute: typeof SawalJawabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/qa': {
@@ -384,6 +404,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearnRoute: LearnRouteWithChildren,
   MythRoute: MythRouteWithChildren,
   QaRoute: QaRoute,
+  SawalJawabRoute: SawalJawabRoute,
   SearchRoute: SearchRoute,
 }
 export const routeTree = rootRouteImport
