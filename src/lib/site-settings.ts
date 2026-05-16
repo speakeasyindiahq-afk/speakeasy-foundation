@@ -25,6 +25,19 @@ export type Article = {
   id: string; slug?: string | null; title: string; title_hi?: string | null;
   excerpt?: string | null; excerpt_hi?: string | null; cover_url?: string | null;
   category?: string | null; created_at: string;
+  sub_category?: string | null;
+  body?: string | null; body_hi?: string | null;
+  sources?: { title: string; url: string }[] | null;
+  seo_title?: string | null; seo_title_hi?: string | null;
+  seo_description?: string | null; seo_description_hi?: string | null;
+  focus_keyword?: string | null;
+  content_warning?: boolean | null;
+  expert_id?: string | null;
+  review_date?: string | null;
+  helpful_count?: number | null;
+  not_helpful_count?: number | null;
+  status?: string | null;
+  experts?: Expert | null;
 };
 export type Myth = {
   id: string; myth: string; myth_hi?: string | null; fact: string; fact_hi?: string | null;
@@ -37,4 +50,5 @@ export type AudioEpisode = {
 };
 export type Expert = {
   id: string; name: string; credentials?: string | null; avatar_url?: string | null;
+  city?: string | null; bio?: string | null;
 };

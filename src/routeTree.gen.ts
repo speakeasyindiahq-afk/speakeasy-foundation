@@ -15,9 +15,12 @@ import { Route as LearnRouteImport } from './routes/learn'
 import { Route as AudioRouteImport } from './routes/audio'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LearnCategoryRouteImport } from './routes/learn.$category'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminHomepageRouteImport } from './routes/admin.homepage'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as LearnCategorySlugRouteImport } from './routes/learn.$category.$slug'
+import { Route as AdminContentArticlesRouteImport } from './routes/admin.content.articles'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -49,6 +52,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnCategoryRoute = LearnCategoryRouteImport.update({
+  id: '/$category',
+  path: '/$category',
+  getParentRoute: () => LearnRoute,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -64,40 +72,59 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const LearnCategorySlugRoute = LearnCategorySlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => LearnCategoryRoute,
+} as any)
+const AdminContentArticlesRoute = AdminContentArticlesRouteImport.update({
+  id: '/content/articles',
+  path: '/content/articles',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRoute
-  '/learn': typeof LearnRoute
+  '/learn': typeof LearnRouteWithChildren
   '/qa': typeof QaRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
+  '/learn/$category': typeof LearnCategoryRouteWithChildren
+  '/admin/content/articles': typeof AdminContentArticlesRoute
+  '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRoute
-  '/learn': typeof LearnRoute
+  '/learn': typeof LearnRouteWithChildren
   '/qa': typeof QaRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
+  '/learn/$category': typeof LearnCategoryRouteWithChildren
+  '/admin/content/articles': typeof AdminContentArticlesRoute
+  '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRoute
-  '/learn': typeof LearnRoute
+  '/learn': typeof LearnRouteWithChildren
   '/qa': typeof QaRoute
   '/search': typeof SearchRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
+  '/learn/$category': typeof LearnCategoryRouteWithChildren
+  '/admin/content/articles': typeof AdminContentArticlesRoute
+  '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +138,9 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
+    | '/learn/$category'
+    | '/admin/content/articles'
+    | '/learn/$category/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +152,9 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
+    | '/learn/$category'
+    | '/admin/content/articles'
+    | '/learn/$category/$slug'
   id:
     | '__root__'
     | '/'
@@ -133,13 +166,16 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
+    | '/learn/$category'
+    | '/admin/content/articles'
+    | '/learn/$category/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AudioRoute: typeof AudioRoute
-  LearnRoute: typeof LearnRoute
+  LearnRoute: typeof LearnRouteWithChildren
   QaRoute: typeof QaRoute
   SearchRoute: typeof SearchRoute
 }
@@ -188,6 +224,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/$category': {
+      id: '/learn/$category'
+      path: '/$category'
+      fullPath: '/learn/$category'
+      preLoaderRoute: typeof LearnCategoryRouteImport
+      parentRoute: typeof LearnRoute
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
@@ -209,6 +252,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/learn/$category/$slug': {
+      id: '/learn/$category/$slug'
+      path: '/$slug'
+      fullPath: '/learn/$category/$slug'
+      preLoaderRoute: typeof LearnCategorySlugRouteImport
+      parentRoute: typeof LearnCategoryRoute
+    }
+    '/admin/content/articles': {
+      id: '/admin/content/articles'
+      path: '/content/articles'
+      fullPath: '/admin/content/articles'
+      preLoaderRoute: typeof AdminContentArticlesRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
@@ -216,21 +273,45 @@ interface AdminRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminHomepageRoute: typeof AdminHomepageRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminContentArticlesRoute: typeof AdminContentArticlesRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
   AdminHomepageRoute: AdminHomepageRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminContentArticlesRoute: AdminContentArticlesRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface LearnCategoryRouteChildren {
+  LearnCategorySlugRoute: typeof LearnCategorySlugRoute
+}
+
+const LearnCategoryRouteChildren: LearnCategoryRouteChildren = {
+  LearnCategorySlugRoute: LearnCategorySlugRoute,
+}
+
+const LearnCategoryRouteWithChildren = LearnCategoryRoute._addFileChildren(
+  LearnCategoryRouteChildren,
+)
+
+interface LearnRouteChildren {
+  LearnCategoryRoute: typeof LearnCategoryRouteWithChildren
+}
+
+const LearnRouteChildren: LearnRouteChildren = {
+  LearnCategoryRoute: LearnCategoryRouteWithChildren,
+}
+
+const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AudioRoute: AudioRoute,
-  LearnRoute: LearnRoute,
+  LearnRoute: LearnRouteWithChildren,
   QaRoute: QaRoute,
   SearchRoute: SearchRoute,
 }
