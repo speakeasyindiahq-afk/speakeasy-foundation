@@ -19,6 +19,7 @@ import { Route as LearnCategoryRouteImport } from './routes/learn.$category'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminHomepageRouteImport } from './routes/admin.homepage'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as LearnCategorySlugRouteImport } from './routes/learn.$category.$slug'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -70,6 +71,11 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const LearnCategorySlugRoute = LearnCategorySlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => LearnCategoryRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -81,7 +87,8 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
-  '/learn/$category': typeof LearnCategoryRoute
+  '/learn/$category': typeof LearnCategoryRouteWithChildren
+  '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -93,7 +100,8 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
-  '/learn/$category': typeof LearnCategoryRoute
+  '/learn/$category': typeof LearnCategoryRouteWithChildren
+  '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -106,7 +114,8 @@ export interface FileRoutesById {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
-  '/learn/$category': typeof LearnCategoryRoute
+  '/learn/$category': typeof LearnCategoryRouteWithChildren
+  '/learn/$category/$slug': typeof LearnCategorySlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/admin/homepage'
     | '/admin/login'
     | '/learn/$category'
+    | '/learn/$category/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/admin/homepage'
     | '/admin/login'
     | '/learn/$category'
+    | '/learn/$category/$slug'
   id:
     | '__root__'
     | '/'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/admin/homepage'
     | '/admin/login'
     | '/learn/$category'
+    | '/learn/$category/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -228,6 +240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/learn/$category/$slug': {
+      id: '/learn/$category/$slug'
+      path: '/$slug'
+      fullPath: '/learn/$category/$slug'
+      preLoaderRoute: typeof LearnCategorySlugRouteImport
+      parentRoute: typeof LearnCategoryRoute
+    }
   }
 }
 
@@ -245,12 +264,24 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface LearnCategoryRouteChildren {
+  LearnCategorySlugRoute: typeof LearnCategorySlugRoute
+}
+
+const LearnCategoryRouteChildren: LearnCategoryRouteChildren = {
+  LearnCategorySlugRoute: LearnCategorySlugRoute,
+}
+
+const LearnCategoryRouteWithChildren = LearnCategoryRoute._addFileChildren(
+  LearnCategoryRouteChildren,
+)
+
 interface LearnRouteChildren {
-  LearnCategoryRoute: typeof LearnCategoryRoute
+  LearnCategoryRoute: typeof LearnCategoryRouteWithChildren
 }
 
 const LearnRouteChildren: LearnRouteChildren = {
-  LearnCategoryRoute: LearnCategoryRoute,
+  LearnCategoryRoute: LearnCategoryRouteWithChildren,
 }
 
 const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
