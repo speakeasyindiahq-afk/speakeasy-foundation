@@ -19,10 +19,12 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MythSlugRouteImport } from './routes/myth.$slug'
 import { Route as LearnCategoryRouteImport } from './routes/learn.$category'
+import { Route as AudioSlugRouteImport } from './routes/audio.$slug'
 import { Route as AdminQaRouteImport } from './routes/admin.qa'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminHomepageRouteImport } from './routes/admin.homepage'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as AdminAudioRouteImport } from './routes/admin.audio'
 import { Route as LearnCategorySlugRouteImport } from './routes/learn.$category.$slug'
 import { Route as AdminContentMythsRouteImport } from './routes/admin.content.myths'
 import { Route as AdminContentArticlesRouteImport } from './routes/admin.content.articles'
@@ -77,6 +79,11 @@ const LearnCategoryRoute = LearnCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => LearnRoute,
 } as any)
+const AudioSlugRoute = AudioSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => AudioRoute,
+} as any)
 const AdminQaRoute = AdminQaRouteImport.update({
   id: '/qa',
   path: '/qa',
@@ -95,6 +102,11 @@ const AdminHomepageRoute = AdminHomepageRouteImport.update({
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAudioRoute = AdminAudioRouteImport.update({
+  id: '/audio',
+  path: '/audio',
   getParentRoute: () => AdminRoute,
 } as any)
 const LearnCategorySlugRoute = LearnCategorySlugRouteImport.update({
@@ -116,16 +128,18 @@ const AdminContentArticlesRoute = AdminContentArticlesRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/audio': typeof AudioRoute
+  '/audio': typeof AudioRouteWithChildren
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
   '/qa': typeof QaRoute
   '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
+  '/admin/audio': typeof AdminAudioRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/qa': typeof AdminQaRoute
+  '/audio/$slug': typeof AudioSlugRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
@@ -135,16 +149,18 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/audio': typeof AudioRoute
+  '/audio': typeof AudioRouteWithChildren
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
   '/qa': typeof QaRoute
   '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
+  '/admin/audio': typeof AdminAudioRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/qa': typeof AdminQaRoute
+  '/audio/$slug': typeof AudioSlugRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
@@ -155,16 +171,18 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/audio': typeof AudioRoute
+  '/audio': typeof AudioRouteWithChildren
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
   '/qa': typeof QaRoute
   '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
+  '/admin/audio': typeof AdminAudioRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/qa': typeof AdminQaRoute
+  '/audio/$slug': typeof AudioSlugRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
   '/admin/content/articles': typeof AdminContentArticlesRoute
@@ -182,10 +200,12 @@ export interface FileRouteTypes {
     | '/qa'
     | '/sawal-jawab'
     | '/search'
+    | '/admin/audio'
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
     | '/admin/qa'
+    | '/audio/$slug'
     | '/learn/$category'
     | '/myth/$slug'
     | '/admin/content/articles'
@@ -201,10 +221,12 @@ export interface FileRouteTypes {
     | '/qa'
     | '/sawal-jawab'
     | '/search'
+    | '/admin/audio'
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
     | '/admin/qa'
+    | '/audio/$slug'
     | '/learn/$category'
     | '/myth/$slug'
     | '/admin/content/articles'
@@ -220,10 +242,12 @@ export interface FileRouteTypes {
     | '/qa'
     | '/sawal-jawab'
     | '/search'
+    | '/admin/audio'
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
     | '/admin/qa'
+    | '/audio/$slug'
     | '/learn/$category'
     | '/myth/$slug'
     | '/admin/content/articles'
@@ -234,7 +258,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  AudioRoute: typeof AudioRoute
+  AudioRoute: typeof AudioRouteWithChildren
   LearnRoute: typeof LearnRouteWithChildren
   MythRoute: typeof MythRouteWithChildren
   QaRoute: typeof QaRoute
@@ -314,6 +338,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnCategoryRouteImport
       parentRoute: typeof LearnRoute
     }
+    '/audio/$slug': {
+      id: '/audio/$slug'
+      path: '/$slug'
+      fullPath: '/audio/$slug'
+      preLoaderRoute: typeof AudioSlugRouteImport
+      parentRoute: typeof AudioRoute
+    }
     '/admin/qa': {
       id: '/admin/qa'
       path: '/qa'
@@ -342,6 +373,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/audio': {
+      id: '/admin/audio'
+      path: '/audio'
+      fullPath: '/admin/audio'
+      preLoaderRoute: typeof AdminAudioRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/learn/$category/$slug': {
       id: '/learn/$category/$slug'
       path: '/$slug'
@@ -367,6 +405,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminAudioRoute: typeof AdminAudioRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminHomepageRoute: typeof AdminHomepageRoute
   AdminLoginRoute: typeof AdminLoginRoute
@@ -376,6 +415,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAudioRoute: AdminAudioRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminHomepageRoute: AdminHomepageRoute,
   AdminLoginRoute: AdminLoginRoute,
@@ -385,6 +425,16 @@ const AdminRouteChildren: AdminRouteChildren = {
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface AudioRouteChildren {
+  AudioSlugRoute: typeof AudioSlugRoute
+}
+
+const AudioRouteChildren: AudioRouteChildren = {
+  AudioSlugRoute: AudioSlugRoute,
+}
+
+const AudioRouteWithChildren = AudioRoute._addFileChildren(AudioRouteChildren)
 
 interface LearnCategoryRouteChildren {
   LearnCategorySlugRoute: typeof LearnCategorySlugRoute
@@ -421,7 +471,7 @@ const MythRouteWithChildren = MythRoute._addFileChildren(MythRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  AudioRoute: AudioRoute,
+  AudioRoute: AudioRouteWithChildren,
   LearnRoute: LearnRouteWithChildren,
   MythRoute: MythRouteWithChildren,
   QaRoute: QaRoute,
