@@ -56,9 +56,24 @@ export type Myth = {
   experts?: Expert | null;
 };
 export type AudioEpisode = {
-  id: string; title: string; title_hi?: string | null; description?: string | null;
-  duration_minutes?: number | null; audio_url?: string | null; cover_url?: string | null;
+  id: string;
+  slug?: string | null;
+  title: string; title_hi?: string | null;
+  description?: string | null; description_hi?: string | null;
+  transcript_en?: string | null; transcript_hi?: string | null;
+  category?: string | null;
+  language?: string | null;
+  duration_seconds?: number | null;
+  duration_minutes?: number | null;
+  audio_url?: string | null;
+  cover_url?: string | null;
+  expert_id?: string | null;
+  seo_title?: string | null; seo_title_hi?: string | null;
+  seo_description?: string | null; seo_description_hi?: string | null;
+  play_count?: number | null;
+  status?: string | null;
   created_at: string;
+  experts?: Expert | null;
 };
 export type Expert = {
   id: string; name: string; credentials?: string | null; avatar_url?: string | null;
