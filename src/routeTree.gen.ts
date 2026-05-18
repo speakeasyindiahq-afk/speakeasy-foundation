@@ -11,15 +11,21 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SawalJawabRouteImport } from './routes/sawal-jawab'
+import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as QaRouteImport } from './routes/qa'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MythRouteImport } from './routes/myth'
 import { Route as LearnRouteImport } from './routes/learn'
+import { Route as DisclaimerRouteImport } from './routes/disclaimer'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AudioRouteImport } from './routes/audio'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MythSlugRouteImport } from './routes/myth.$slug'
 import { Route as LearnCategoryRouteImport } from './routes/learn.$category'
 import { Route as AudioSlugRouteImport } from './routes/audio.$slug'
+import { Route as AdminTrustRouteImport } from './routes/admin.trust'
 import { Route as AdminQaRouteImport } from './routes/admin.qa'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminHomepageRouteImport } from './routes/admin.homepage'
@@ -39,9 +45,19 @@ const SawalJawabRoute = SawalJawabRouteImport.update({
   path: '/sawal-jawab',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QaRoute = QaRouteImport.update({
   id: '/qa',
   path: '/qa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MythRoute = MythRouteImport.update({
@@ -54,6 +70,16 @@ const LearnRoute = LearnRouteImport.update({
   path: '/learn',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DisclaimerRoute = DisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AudioRoute = AudioRouteImport.update({
   id: '/audio',
   path: '/audio',
@@ -62,6 +88,11 @@ const AudioRoute = AudioRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -83,6 +114,11 @@ const AudioSlugRoute = AudioSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => AudioRoute,
+} as any)
+const AdminTrustRoute = AdminTrustRouteImport.update({
+  id: '/trust',
+  path: '/trust',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminQaRoute = AdminQaRouteImport.update({
   id: '/qa',
@@ -127,11 +163,16 @@ const AdminContentArticlesRoute = AdminContentArticlesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRouteWithChildren
+  '/contact': typeof ContactRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
+  '/privacy': typeof PrivacyRoute
   '/qa': typeof QaRoute
+  '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
   '/admin/audio': typeof AdminAudioRoute
@@ -139,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/qa': typeof AdminQaRoute
+  '/admin/trust': typeof AdminTrustRoute
   '/audio/$slug': typeof AudioSlugRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
@@ -148,11 +190,16 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRouteWithChildren
+  '/contact': typeof ContactRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
+  '/privacy': typeof PrivacyRoute
   '/qa': typeof QaRoute
+  '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
   '/admin/audio': typeof AdminAudioRoute
@@ -160,6 +207,7 @@ export interface FileRoutesByTo {
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/qa': typeof AdminQaRoute
+  '/admin/trust': typeof AdminTrustRoute
   '/audio/$slug': typeof AudioSlugRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
@@ -170,11 +218,16 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRouteWithChildren
+  '/contact': typeof ContactRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
+  '/privacy': typeof PrivacyRoute
   '/qa': typeof QaRoute
+  '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
   '/admin/audio': typeof AdminAudioRoute
@@ -182,6 +235,7 @@ export interface FileRoutesById {
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/qa': typeof AdminQaRoute
+  '/admin/trust': typeof AdminTrustRoute
   '/audio/$slug': typeof AudioSlugRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
   '/myth/$slug': typeof MythSlugRoute
@@ -193,11 +247,16 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/admin'
     | '/audio'
+    | '/contact'
+    | '/disclaimer'
     | '/learn'
     | '/myth'
+    | '/privacy'
     | '/qa'
+    | '/resources'
     | '/sawal-jawab'
     | '/search'
     | '/admin/audio'
@@ -205,6 +264,7 @@ export interface FileRouteTypes {
     | '/admin/homepage'
     | '/admin/login'
     | '/admin/qa'
+    | '/admin/trust'
     | '/audio/$slug'
     | '/learn/$category'
     | '/myth/$slug'
@@ -214,11 +274,16 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/admin'
     | '/audio'
+    | '/contact'
+    | '/disclaimer'
     | '/learn'
     | '/myth'
+    | '/privacy'
     | '/qa'
+    | '/resources'
     | '/sawal-jawab'
     | '/search'
     | '/admin/audio'
@@ -226,6 +291,7 @@ export interface FileRouteTypes {
     | '/admin/homepage'
     | '/admin/login'
     | '/admin/qa'
+    | '/admin/trust'
     | '/audio/$slug'
     | '/learn/$category'
     | '/myth/$slug'
@@ -235,11 +301,16 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/admin'
     | '/audio'
+    | '/contact'
+    | '/disclaimer'
     | '/learn'
     | '/myth'
+    | '/privacy'
     | '/qa'
+    | '/resources'
     | '/sawal-jawab'
     | '/search'
     | '/admin/audio'
@@ -247,6 +318,7 @@ export interface FileRouteTypes {
     | '/admin/homepage'
     | '/admin/login'
     | '/admin/qa'
+    | '/admin/trust'
     | '/audio/$slug'
     | '/learn/$category'
     | '/myth/$slug'
@@ -257,11 +329,16 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   AudioRoute: typeof AudioRouteWithChildren
+  ContactRoute: typeof ContactRoute
+  DisclaimerRoute: typeof DisclaimerRoute
   LearnRoute: typeof LearnRouteWithChildren
   MythRoute: typeof MythRouteWithChildren
+  PrivacyRoute: typeof PrivacyRoute
   QaRoute: typeof QaRoute
+  ResourcesRoute: typeof ResourcesRoute
   SawalJawabRoute: typeof SawalJawabRoute
   SearchRoute: typeof SearchRoute
 }
@@ -282,11 +359,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SawalJawabRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/qa': {
       id: '/qa'
       path: '/qa'
       fullPath: '/qa'
       preLoaderRoute: typeof QaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/myth': {
@@ -303,6 +394,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/audio': {
       id: '/audio'
       path: '/audio'
@@ -315,6 +420,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -344,6 +456,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/audio/$slug'
       preLoaderRoute: typeof AudioSlugRouteImport
       parentRoute: typeof AudioRoute
+    }
+    '/admin/trust': {
+      id: '/admin/trust'
+      path: '/trust'
+      fullPath: '/admin/trust'
+      preLoaderRoute: typeof AdminTrustRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/qa': {
       id: '/admin/qa'
@@ -410,6 +529,7 @@ interface AdminRouteChildren {
   AdminHomepageRoute: typeof AdminHomepageRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminQaRoute: typeof AdminQaRoute
+  AdminTrustRoute: typeof AdminTrustRoute
   AdminContentArticlesRoute: typeof AdminContentArticlesRoute
   AdminContentMythsRoute: typeof AdminContentMythsRoute
 }
@@ -420,6 +540,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminHomepageRoute: AdminHomepageRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminQaRoute: AdminQaRoute,
+  AdminTrustRoute: AdminTrustRoute,
   AdminContentArticlesRoute: AdminContentArticlesRoute,
   AdminContentMythsRoute: AdminContentMythsRoute,
 }
@@ -470,11 +591,16 @@ const MythRouteWithChildren = MythRoute._addFileChildren(MythRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   AudioRoute: AudioRouteWithChildren,
+  ContactRoute: ContactRoute,
+  DisclaimerRoute: DisclaimerRoute,
   LearnRoute: LearnRouteWithChildren,
   MythRoute: MythRouteWithChildren,
+  PrivacyRoute: PrivacyRoute,
   QaRoute: QaRoute,
+  ResourcesRoute: ResourcesRoute,
   SawalJawabRoute: SawalJawabRoute,
   SearchRoute: SearchRoute,
 }

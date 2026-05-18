@@ -34,12 +34,17 @@ export function Footer() {
             >
               <Phone className="h-4 w-4" /> {t("footer.icall")}
             </a>
+            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              <li><Link to="/resources" className="hover:text-foreground">Resources</Link></li>
+              <li><Link to="/contact" className="hover:text-foreground">Contact</Link></li>
+            </ul>
           </div>
           <div>
             <h4 className="text-sm font-semibold">{t("footer.about")}</h4>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><Link to="/" className="hover:text-foreground">{t("nav.about")}</Link></li>
-              <li><Link to="/" className="hover:text-foreground">{t("nav.trust")}</Link></li>
+              <li><Link to="/about" className="hover:text-foreground">{t("nav.about")}</Link></li>
+              <li><Link to="/privacy" className="hover:text-foreground">Privacy</Link></li>
+              <li><Link to="/disclaimer" className="hover:text-foreground">Disclaimer</Link></li>
             </ul>
           </div>
         </div>
