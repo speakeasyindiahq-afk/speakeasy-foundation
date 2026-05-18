@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SawalJawabRouteImport } from './routes/sawal-jawab'
+import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as QaRouteImport } from './routes/qa'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MythRouteImport } from './routes/myth'
@@ -40,6 +41,11 @@ const SearchRoute = SearchRouteImport.update({
 const SawalJawabRoute = SawalJawabRouteImport.update({
   id: '/sawal-jawab',
   path: '/sawal-jawab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QaRoute = QaRouteImport.update({
@@ -153,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/myth': typeof MythRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/qa': typeof QaRoute
+  '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
   '/admin/audio': typeof AdminAudioRoute
@@ -177,6 +184,7 @@ export interface FileRoutesByTo {
   '/myth': typeof MythRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/qa': typeof QaRoute
+  '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
   '/admin/audio': typeof AdminAudioRoute
@@ -202,6 +210,7 @@ export interface FileRoutesById {
   '/myth': typeof MythRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/qa': typeof QaRoute
+  '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
   '/admin/audio': typeof AdminAudioRoute
@@ -228,6 +237,7 @@ export interface FileRouteTypes {
     | '/myth'
     | '/privacy'
     | '/qa'
+    | '/resources'
     | '/sawal-jawab'
     | '/search'
     | '/admin/audio'
@@ -252,6 +262,7 @@ export interface FileRouteTypes {
     | '/myth'
     | '/privacy'
     | '/qa'
+    | '/resources'
     | '/sawal-jawab'
     | '/search'
     | '/admin/audio'
@@ -276,6 +287,7 @@ export interface FileRouteTypes {
     | '/myth'
     | '/privacy'
     | '/qa'
+    | '/resources'
     | '/sawal-jawab'
     | '/search'
     | '/admin/audio'
@@ -301,6 +313,7 @@ export interface RootRouteChildren {
   MythRoute: typeof MythRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   QaRoute: typeof QaRoute
+  ResourcesRoute: typeof ResourcesRoute
   SawalJawabRoute: typeof SawalJawabRoute
   SearchRoute: typeof SearchRoute
 }
@@ -319,6 +332,13 @@ declare module '@tanstack/react-router' {
       path: '/sawal-jawab'
       fullPath: '/sawal-jawab'
       preLoaderRoute: typeof SawalJawabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/qa': {
@@ -538,6 +558,7 @@ const rootRouteChildren: RootRouteChildren = {
   MythRoute: MythRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   QaRoute: QaRoute,
+  ResourcesRoute: ResourcesRoute,
   SawalJawabRoute: SawalJawabRoute,
   SearchRoute: SearchRoute,
 }
