@@ -17,6 +17,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MythRouteImport } from './routes/myth'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AudioRouteImport } from './routes/audio'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
@@ -71,6 +72,11 @@ const LearnRoute = LearnRouteImport.update({
 const DisclaimerRoute = DisclaimerRouteImport.update({
   id: '/disclaimer',
   path: '/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AudioRoute = AudioRouteImport.update({
@@ -154,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRouteWithChildren
+  '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
@@ -179,6 +186,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRouteWithChildren
+  '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
@@ -205,6 +213,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/audio': typeof AudioRouteWithChildren
+  '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/learn': typeof LearnRouteWithChildren
   '/myth': typeof MythRouteWithChildren
@@ -232,6 +241,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/audio'
+    | '/contact'
     | '/disclaimer'
     | '/learn'
     | '/myth'
@@ -257,6 +267,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/audio'
+    | '/contact'
     | '/disclaimer'
     | '/learn'
     | '/myth'
@@ -282,6 +293,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/audio'
+    | '/contact'
     | '/disclaimer'
     | '/learn'
     | '/myth'
@@ -308,6 +320,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   AudioRoute: typeof AudioRouteWithChildren
+  ContactRoute: typeof ContactRoute
   DisclaimerRoute: typeof DisclaimerRoute
   LearnRoute: typeof LearnRouteWithChildren
   MythRoute: typeof MythRouteWithChildren
@@ -374,6 +387,13 @@ declare module '@tanstack/react-router' {
       path: '/disclaimer'
       fullPath: '/disclaimer'
       preLoaderRoute: typeof DisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/audio': {
@@ -553,6 +573,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   AudioRoute: AudioRouteWithChildren,
+  ContactRoute: ContactRoute,
   DisclaimerRoute: DisclaimerRoute,
   LearnRoute: LearnRouteWithChildren,
   MythRoute: MythRouteWithChildren,
