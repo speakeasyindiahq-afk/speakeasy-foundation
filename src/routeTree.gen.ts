@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SearchRouteImport } from './routes/search'
 import { Route as SawalJawabRouteImport } from './routes/sawal-jawab'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as QaRouteImport } from './routes/qa'
@@ -35,11 +34,6 @@ import { Route as LearnCategorySlugRouteImport } from './routes/learn.$category.
 import { Route as AdminContentMythsRouteImport } from './routes/admin.content.myths'
 import { Route as AdminContentArticlesRouteImport } from './routes/admin.content.articles'
 
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SawalJawabRoute = SawalJawabRouteImport.update({
   id: '/sawal-jawab',
   path: '/sawal-jawab',
@@ -174,7 +168,6 @@ export interface FileRoutesByFullPath {
   '/qa': typeof QaRoute
   '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
-  '/search': typeof SearchRoute
   '/admin/audio': typeof AdminAudioRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
@@ -201,7 +194,6 @@ export interface FileRoutesByTo {
   '/qa': typeof QaRoute
   '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
-  '/search': typeof SearchRoute
   '/admin/audio': typeof AdminAudioRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
@@ -229,7 +221,6 @@ export interface FileRoutesById {
   '/qa': typeof QaRoute
   '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
-  '/search': typeof SearchRoute
   '/admin/audio': typeof AdminAudioRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
@@ -258,7 +249,6 @@ export interface FileRouteTypes {
     | '/qa'
     | '/resources'
     | '/sawal-jawab'
-    | '/search'
     | '/admin/audio'
     | '/admin/dashboard'
     | '/admin/homepage'
@@ -285,7 +275,6 @@ export interface FileRouteTypes {
     | '/qa'
     | '/resources'
     | '/sawal-jawab'
-    | '/search'
     | '/admin/audio'
     | '/admin/dashboard'
     | '/admin/homepage'
@@ -312,7 +301,6 @@ export interface FileRouteTypes {
     | '/qa'
     | '/resources'
     | '/sawal-jawab'
-    | '/search'
     | '/admin/audio'
     | '/admin/dashboard'
     | '/admin/homepage'
@@ -340,18 +328,10 @@ export interface RootRouteChildren {
   QaRoute: typeof QaRoute
   ResourcesRoute: typeof ResourcesRoute
   SawalJawabRoute: typeof SawalJawabRoute
-  SearchRoute: typeof SearchRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/sawal-jawab': {
       id: '/sawal-jawab'
       path: '/sawal-jawab'
@@ -602,8 +582,17 @@ const rootRouteChildren: RootRouteChildren = {
   QaRoute: QaRoute,
   ResourcesRoute: ResourcesRoute,
   SawalJawabRoute: SawalJawabRoute,
-  SearchRoute: SearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
