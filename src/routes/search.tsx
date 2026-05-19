@@ -30,7 +30,7 @@ const MAX_RECENT = 6;
 const SUGGESTED = ["Consent", "Contraception", "STI", "Periods", "Pregnancy", "Relationships", "Body image", "LGBTQ+"];
 
 function SearchPage() {
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<ResultType | "all">("all");
   const [results, setResults] = useState<Result[]>([]);
