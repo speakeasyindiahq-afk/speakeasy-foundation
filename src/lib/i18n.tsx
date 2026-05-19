@@ -148,6 +148,35 @@ export const dict: Dict = {
   "myth.related": { en: "Related myths", hi: "संबंधित भ्रांतियाँ" },
   "myth.breadcrumb": { en: "Myths", hi: "भ्रांतियाँ" },
   "myth.notfound": { en: "Myth not found.", hi: "भ्रांति नहीं मिली।" },
+
+  "nav.privacy": { en: "Privacy", hi: "गोपनीयता" },
+  "nav.resources": { en: "Resources", hi: "संसाधन" },
+  "nav.contact": { en: "Contact", hi: "संपर्क" },
+  "menu.padhai": { en: "Padhai", hi: "पढ़ाई" },
+  "menu.aur": { en: "Aur", hi: "और" },
+  "menu.trust": { en: "Trust & Help", hi: "विश्वास व सहायता" },
+  "menu.language": { en: "Language", hi: "भाषा" },
+  "menu.footnote": {
+    en: "Education only. Not medical advice. 18+",
+    hi: "केवल शिक्षा। चिकित्सीय सलाह नहीं। 18+",
+  },
+
+  "search.title": { en: "Search", hi: "खोज" },
+  "search.placeholder": { en: "Search articles, myths, audio, Q&A…", hi: "लेख, भ्रांतियाँ, ऑडियो, सवाल खोजें…" },
+  "search.recent": { en: "Recent searches", hi: "हाल की खोजें" },
+  "search.clearRecent": { en: "Clear", hi: "साफ़ करें" },
+  "search.suggested": { en: "Suggested topics", hi: "सुझाए विषय" },
+  "search.filter.all": { en: "All", hi: "सभी" },
+  "search.filter.learn": { en: "Learn", hi: "सीखें" },
+  "search.filter.myths": { en: "Myths", hi: "भ्रांतियाँ" },
+  "search.filter.qa": { en: "Q&A", hi: "प्रश्नोत्तर" },
+  "search.filter.audio": { en: "Audio", hi: "ऑडियो" },
+  "search.noResults": { en: "Kuch nahi mila. WhatsApp pe humse pucho →", hi: "कुछ नहीं मिला। WhatsApp पे हमसे पूछो →" },
+  "search.loading": { en: "Searching…", hi: "खोज रहे हैं…" },
+  "search.type.learn": { en: "Article", hi: "लेख" },
+  "search.type.myths": { en: "Myth", hi: "भ्रांति" },
+  "search.type.qa": { en: "Q&A", hi: "सवाल-जवाब" },
+  "search.type.audio": { en: "Audio", hi: "ऑडियो" },
 };
 
 const Ctx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (k: keyof typeof dict) => string }>({
