@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as SawalJawabRouteImport } from './routes/sawal-jawab'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as QaRouteImport } from './routes/qa'
@@ -25,6 +26,7 @@ import { Route as MythSlugRouteImport } from './routes/myth.$slug'
 import { Route as LearnCategoryRouteImport } from './routes/learn.$category'
 import { Route as AudioSlugRouteImport } from './routes/audio.$slug'
 import { Route as AdminTrustRouteImport } from './routes/admin.trust'
+import { Route as AdminSearchRouteImport } from './routes/admin.search'
 import { Route as AdminQaRouteImport } from './routes/admin.qa'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminHomepageRouteImport } from './routes/admin.homepage'
@@ -34,6 +36,11 @@ import { Route as LearnCategorySlugRouteImport } from './routes/learn.$category.
 import { Route as AdminContentMythsRouteImport } from './routes/admin.content.myths'
 import { Route as AdminContentArticlesRouteImport } from './routes/admin.content.articles'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SawalJawabRoute = SawalJawabRouteImport.update({
   id: '/sawal-jawab',
   path: '/sawal-jawab',
@@ -114,6 +121,11 @@ const AdminTrustRoute = AdminTrustRouteImport.update({
   path: '/trust',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSearchRoute = AdminSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminQaRoute = AdminQaRouteImport.update({
   id: '/qa',
   path: '/qa',
@@ -168,11 +180,13 @@ export interface FileRoutesByFullPath {
   '/qa': typeof QaRoute
   '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
+  '/search': typeof SearchRoute
   '/admin/audio': typeof AdminAudioRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/qa': typeof AdminQaRoute
+  '/admin/search': typeof AdminSearchRoute
   '/admin/trust': typeof AdminTrustRoute
   '/audio/$slug': typeof AudioSlugRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
@@ -194,11 +208,13 @@ export interface FileRoutesByTo {
   '/qa': typeof QaRoute
   '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
+  '/search': typeof SearchRoute
   '/admin/audio': typeof AdminAudioRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/qa': typeof AdminQaRoute
+  '/admin/search': typeof AdminSearchRoute
   '/admin/trust': typeof AdminTrustRoute
   '/audio/$slug': typeof AudioSlugRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
@@ -221,11 +237,13 @@ export interface FileRoutesById {
   '/qa': typeof QaRoute
   '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
+  '/search': typeof SearchRoute
   '/admin/audio': typeof AdminAudioRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/qa': typeof AdminQaRoute
+  '/admin/search': typeof AdminSearchRoute
   '/admin/trust': typeof AdminTrustRoute
   '/audio/$slug': typeof AudioSlugRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
@@ -249,11 +267,13 @@ export interface FileRouteTypes {
     | '/qa'
     | '/resources'
     | '/sawal-jawab'
+    | '/search'
     | '/admin/audio'
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
     | '/admin/qa'
+    | '/admin/search'
     | '/admin/trust'
     | '/audio/$slug'
     | '/learn/$category'
@@ -275,11 +295,13 @@ export interface FileRouteTypes {
     | '/qa'
     | '/resources'
     | '/sawal-jawab'
+    | '/search'
     | '/admin/audio'
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
     | '/admin/qa'
+    | '/admin/search'
     | '/admin/trust'
     | '/audio/$slug'
     | '/learn/$category'
@@ -301,11 +323,13 @@ export interface FileRouteTypes {
     | '/qa'
     | '/resources'
     | '/sawal-jawab'
+    | '/search'
     | '/admin/audio'
     | '/admin/dashboard'
     | '/admin/homepage'
     | '/admin/login'
     | '/admin/qa'
+    | '/admin/search'
     | '/admin/trust'
     | '/audio/$slug'
     | '/learn/$category'
@@ -328,10 +352,18 @@ export interface RootRouteChildren {
   QaRoute: typeof QaRoute
   ResourcesRoute: typeof ResourcesRoute
   SawalJawabRoute: typeof SawalJawabRoute
+  SearchRoute: typeof SearchRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sawal-jawab': {
       id: '/sawal-jawab'
       path: '/sawal-jawab'
@@ -444,6 +476,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTrustRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/search': {
+      id: '/admin/search'
+      path: '/search'
+      fullPath: '/admin/search'
+      preLoaderRoute: typeof AdminSearchRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/qa': {
       id: '/admin/qa'
       path: '/qa'
@@ -509,6 +548,7 @@ interface AdminRouteChildren {
   AdminHomepageRoute: typeof AdminHomepageRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminQaRoute: typeof AdminQaRoute
+  AdminSearchRoute: typeof AdminSearchRoute
   AdminTrustRoute: typeof AdminTrustRoute
   AdminContentArticlesRoute: typeof AdminContentArticlesRoute
   AdminContentMythsRoute: typeof AdminContentMythsRoute
@@ -520,6 +560,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminHomepageRoute: AdminHomepageRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminQaRoute: AdminQaRoute,
+  AdminSearchRoute: AdminSearchRoute,
   AdminTrustRoute: AdminTrustRoute,
   AdminContentArticlesRoute: AdminContentArticlesRoute,
   AdminContentMythsRoute: AdminContentMythsRoute,
@@ -582,6 +623,7 @@ const rootRouteChildren: RootRouteChildren = {
   QaRoute: QaRoute,
   ResourcesRoute: ResourcesRoute,
   SawalJawabRoute: SawalJawabRoute,
+  SearchRoute: SearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
