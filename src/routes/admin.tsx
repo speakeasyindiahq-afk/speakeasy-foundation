@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, useRouterState, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { LayoutDashboard, Home, BookOpen, AlertCircle, Headphones, MessageSquare, Shield, LogOut } from "lucide-react";
+import { LayoutDashboard, Home, BookOpen, AlertCircle, Headphones, MessageSquare, Shield, Search, LogOut } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — Speakeasy India" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -16,6 +16,7 @@ const sections = [
   { to: "/admin/audio", label: "Audio", icon: Headphones },
   { to: "/admin/qa", label: "Q&A", icon: MessageSquare },
   { to: "/admin/trust", label: "Trust", icon: Shield },
+  { to: "/admin/search", label: "Search", icon: Search },
 ];
 
 function AdminLayout() {
