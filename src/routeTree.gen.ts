@@ -32,7 +32,6 @@ import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminHomepageRouteImport } from './routes/admin.homepage'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 import { Route as AdminAudioRouteImport } from './routes/admin.audio'
-import { Route as AdminSearchRouteImport } from './routes/admin.search'
 import { Route as LearnCategorySlugRouteImport } from './routes/learn.$category.$slug'
 import { Route as AdminContentMythsRouteImport } from './routes/admin.content.myths'
 import { Route as AdminContentArticlesRouteImport } from './routes/admin.content.articles'
@@ -150,11 +149,6 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
 const AdminAudioRoute = AdminAudioRouteImport.update({
   id: '/audio',
   path: '/audio',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminSearchRoute = AdminSearchRouteImport.update({
-  id: '/search',
-  path: '/search',
   getParentRoute: () => AdminRoute,
 } as any)
 const LearnCategorySlugRoute = LearnCategorySlugRouteImport.update({
@@ -522,13 +516,6 @@ declare module '@tanstack/react-router' {
       path: '/audio'
       fullPath: '/admin/audio'
       preLoaderRoute: typeof AdminAudioRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/search': {
-      id: '/admin/search'
-      path: '/search'
-      fullPath: '/admin/search'
-      preLoaderRoute: typeof AdminSearchRouteImport
       parentRoute: typeof AdminRoute
     }
     '/learn/$category/$slug': {
