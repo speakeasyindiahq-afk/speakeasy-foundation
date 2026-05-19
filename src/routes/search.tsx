@@ -208,7 +208,7 @@ function SearchPage() {
           {!loading && filtered.length > 0 && (
             <ul className="mt-2 flex flex-col gap-2">
               {filtered.map((r) => (
-                <ResultRow key={`${r.type}-${r.id}`} r={r} q={q} lang={lang} t={t} />
+                <ResultRow key={`${r.type}-${r.id}`} r={r} q={q} t={t} />
               ))}
             </ul>
           )}
@@ -218,13 +218,13 @@ function SearchPage() {
   );
 }
 
-function ResultRow({ r, q, t }: { r: Result; q: string; lang: string; t: (k: any) => string }) {
+function ResultRow({ r, q, t }: { r: Result; q: string; t: (k: any) => string }) {
   const Icon = r.type === "learn" ? BookOpen : r.type === "myths" ? AlertCircle : r.type === "audio" ? Headphones : MessageSquare;
   const typeLabel = t(`search.type.${r.type}`);
   return (
     <li>
       <Link
-        to={r.href}
+        to={r.href as string}
         className="block rounded-xl border border-border bg-card p-4 transition hover:border-primary/40 hover:bg-muted/40"
       >
         <div className="flex items-start gap-3">
