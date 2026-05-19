@@ -224,7 +224,7 @@ function ResultRow({ r, q, t }: { r: Result; q: string; t: (k: any) => string })
   return (
     <li>
       <Link
-        to={r.href as string}
+        to={r.href as any}
         className="block rounded-xl border border-border bg-card p-4 transition hover:border-primary/40 hover:bg-muted/40"
       >
         <div className="flex items-start gap-3">
