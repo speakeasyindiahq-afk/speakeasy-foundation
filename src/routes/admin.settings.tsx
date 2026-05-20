@@ -78,11 +78,12 @@ function SettingsPage() {
     if (reason.trim().length < 10) { setEmergencyMsg("Reason must be at least 10 characters."); return; }
     if (!confirm1 || !confirm2) { setEmergencyMsg("Both confirmations are required."); return; }
     setRunning(true);
-    const { error, count } = await supabase
+    const { data: updated, error } = await supabase
       .from(scope)
       .update({ status: "hidden" })
       .eq("status", "published")
-      .select("id", { count: "exact" });
+      .select("id");
+    const count = updated?.length ?? 0;
     setRunning(false);
     if (error) { setEmergencyMsg(`Failed: ${error.message}`); return; }
     await logAdminAction({
