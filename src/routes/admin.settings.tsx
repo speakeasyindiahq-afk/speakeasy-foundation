@@ -80,9 +80,9 @@ function SettingsPage() {
     setRunning(true);
     const { error, count } = await supabase
       .from(scope)
-      .update({ status: "hidden" }, { count: "exact" })
+      .update({ status: "hidden" })
       .eq("status", "published")
-      .select("id", { count: "exact", head: true });
+      .select("id", { count: "exact" });
     setRunning(false);
     if (error) { setEmergencyMsg(`Failed: ${error.message}`); return; }
     await logAdminAction({
