@@ -26,6 +26,7 @@ import { Route as MythSlugRouteImport } from './routes/myth.$slug'
 import { Route as LearnCategoryRouteImport } from './routes/learn.$category'
 import { Route as AudioSlugRouteImport } from './routes/audio.$slug'
 import { Route as AdminTrustRouteImport } from './routes/admin.trust'
+import { Route as AdminSeoRouteImport } from './routes/admin.seo'
 import { Route as AdminSearchRouteImport } from './routes/admin.search'
 import { Route as AdminQaRouteImport } from './routes/admin.qa'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
@@ -121,6 +122,11 @@ const AdminTrustRoute = AdminTrustRouteImport.update({
   path: '/trust',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSeoRoute = AdminSeoRouteImport.update({
+  id: '/seo',
+  path: '/seo',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSearchRoute = AdminSearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -187,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/admin/qa': typeof AdminQaRoute
   '/admin/search': typeof AdminSearchRoute
+  '/admin/seo': typeof AdminSeoRoute
   '/admin/trust': typeof AdminTrustRoute
   '/audio/$slug': typeof AudioSlugRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
@@ -215,6 +222,7 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/admin/qa': typeof AdminQaRoute
   '/admin/search': typeof AdminSearchRoute
+  '/admin/seo': typeof AdminSeoRoute
   '/admin/trust': typeof AdminTrustRoute
   '/audio/$slug': typeof AudioSlugRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
@@ -244,6 +252,7 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/admin/qa': typeof AdminQaRoute
   '/admin/search': typeof AdminSearchRoute
+  '/admin/seo': typeof AdminSeoRoute
   '/admin/trust': typeof AdminTrustRoute
   '/audio/$slug': typeof AudioSlugRoute
   '/learn/$category': typeof LearnCategoryRouteWithChildren
@@ -274,6 +283,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/qa'
     | '/admin/search'
+    | '/admin/seo'
     | '/admin/trust'
     | '/audio/$slug'
     | '/learn/$category'
@@ -302,6 +312,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/qa'
     | '/admin/search'
+    | '/admin/seo'
     | '/admin/trust'
     | '/audio/$slug'
     | '/learn/$category'
@@ -330,6 +341,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/qa'
     | '/admin/search'
+    | '/admin/seo'
     | '/admin/trust'
     | '/audio/$slug'
     | '/learn/$category'
@@ -476,6 +488,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTrustRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/seo': {
+      id: '/admin/seo'
+      path: '/seo'
+      fullPath: '/admin/seo'
+      preLoaderRoute: typeof AdminSeoRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/search': {
       id: '/admin/search'
       path: '/search'
@@ -549,6 +568,7 @@ interface AdminRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminQaRoute: typeof AdminQaRoute
   AdminSearchRoute: typeof AdminSearchRoute
+  AdminSeoRoute: typeof AdminSeoRoute
   AdminTrustRoute: typeof AdminTrustRoute
   AdminContentArticlesRoute: typeof AdminContentArticlesRoute
   AdminContentMythsRoute: typeof AdminContentMythsRoute
@@ -561,6 +581,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminQaRoute: AdminQaRoute,
   AdminSearchRoute: AdminSearchRoute,
+  AdminSeoRoute: AdminSeoRoute,
   AdminTrustRoute: AdminTrustRoute,
   AdminContentArticlesRoute: AdminContentArticlesRoute,
   AdminContentMythsRoute: AdminContentMythsRoute,
