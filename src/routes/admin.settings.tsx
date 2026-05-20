@@ -91,9 +91,9 @@ function SettingsPage() {
       entity_type: scope,
       reason: reason.trim(),
       severity: "critical",
-      metadata: { affected: count ?? null },
+      metadata: { affected: count },
     });
-    setEmergencyMsg(`Hidden ${count ?? 0} published item${count === 1 ? "" : "s"}. Reversible from the relevant content page.`);
+    setEmergencyMsg(`Hidden ${count} published item${count === 1 ? "" : "s"}. Reversible from the relevant content page.`);
     setReason(""); setConfirm1(false); setConfirm2(false); setScope("");
   };
 
