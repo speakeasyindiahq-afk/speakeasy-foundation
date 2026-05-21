@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X, BookOpen, AlertCircle, Headphones, MessageSquare, Search, Shield, Info, Lock, LifeBuoy, Mail } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useI18n } from "@/lib/i18n";
@@ -7,6 +7,15 @@ import { LanguageToggle } from "./LanguageToggle";
 export function HamburgerMenu() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
 
   const padhai: Array<{ to: string; key: Parameters<typeof t>[0]; Icon: typeof BookOpen }> = [
     { to: "/learn", key: "nav.learn", Icon: BookOpen },
@@ -34,10 +43,18 @@ export function HamburgerMenu() {
         <Menu className="h-5 w-5" />
       </button>
       {open && (
-        <div className="fixed inset-0 z-[8000]" onClick={() => setOpen(false)}>
-          <div className="absolute inset-0 bg-charcoal/50" style={{ backgroundColor: "color-mix(in oklab, var(--charcoal) 50%, transparent)" }} />
+        <div
+          className="fixed inset-0 z-[8000] flex"
+          onClick={() => setOpen(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: "color-mix(in oklab, var(--charcoal) 50%, transparent)" }}
+          />
           <aside
-            className="absolute left-0 top-0 h-full w-[82%] max-w-sm overflow-y-auto bg-card p-6 shadow-2xl"
+            className="relative z-10 flex h-[100dvh] max-h-[100dvh] w-[80vw] max-w-sm flex-col overflow-y-auto overscroll-contain bg-card p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
