@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
@@ -18,8 +18,14 @@ export const Route = createFileRoute("/learn")({
     ],
     links: [{ rel: "canonical", href: "/learn" }],
   }),
-  component: Learn,
+  component: LearnLayout,
 });
+
+function LearnLayout() {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  if (path !== "/learn" && path !== "/learn/") return <Outlet />;
+  return <Learn />;
+}
 
 function Learn() {
   const { t, lang } = useI18n();

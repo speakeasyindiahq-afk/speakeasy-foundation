@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, Outlet, useRouterState } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/learn/$category")({
       links: [{ rel: "canonical", href: `/learn/${params.category}` }],
     };
   },
-  component: CategoryPage,
+  component: CategoryLayout,
   notFoundComponent: () => (
     <div className="mx-auto max-w-[680px] px-5 py-16 text-center">
       <h1 className="text-2xl">Topic not found</h1>
@@ -35,6 +35,14 @@ export const Route = createFileRoute("/learn/$category")({
     </div>
   ),
 });
+
+function CategoryLayout() {
+  const { category } = Route.useParams();
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const targetPath = `/learn/${category}`;
+  if (path !== targetPath && path !== `${targetPath}/`) return <Outlet />;
+  return <CategoryPage />;
+}
 
 function CategoryPage() {
   const { category } = Route.useParams();
