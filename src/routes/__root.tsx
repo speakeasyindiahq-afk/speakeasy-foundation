@@ -73,28 +73,31 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Making Intimacy Easier to Talk About" },
-      { name: "description", content: "Trust-first, medically-reviewed sexual wellness education for India. Bilingual, anonymous, judgement-free." },
-      { name: "author", content: "Speakeasy India" },
-      { property: "og:title", content: "Making Intimacy Easier to Talk About" },
-      { property: "og:description", content: "Trust-first, medically-reviewed sexual wellness education for India. Bilingual, anonymous, judgement-free." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Making Intimacy Easier to Talk About" },
-      { name: "twitter:description", content: "Trust-first, medically-reviewed sexual wellness education for India. Bilingual, anonymous, judgement-free." },
-
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-    ],
-  }),
+head: () => ({
+  meta: [
+    {
+      charSet: "utf-8",
+    },
+    {
+      name: "viewport",
+      content: "width=device-width, initial-scale=1",
+    },
+    {
+      title: "Speakeasy India",
+    },
+    {
+      name: "description",
+      content:
+        "Trust-first sexual wellness education platform for India.",
+    },
+  ],
+  links: [
+    {
+      rel: "stylesheet",
+      href: appCss,
+    },
+  ],
+}),
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
