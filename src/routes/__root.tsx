@@ -77,13 +77,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Speakeasy India — Honest sexual wellness education" },
+      { title: "Making Intimacy Easier to Talk About" },
       { name: "description", content: "Trust-first, medically-reviewed sexual wellness education for India. Bilingual, anonymous, judgement-free." },
       { name: "author", content: "Speakeasy India" },
-      { property: "og:title", content: "Speakeasy India" },
-      { property: "og:description", content: "Trust-first sexual wellness education for India." },
+      { property: "og:title", content: "Making Intimacy Easier to Talk About" },
+      { property: "og:description", content: "Trust-first, medically-reviewed sexual wellness education for India. Bilingual, anonymous, judgement-free." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Making Intimacy Easier to Talk About" },
+      { name: "twitter:description", content: "Trust-first, medically-reviewed sexual wellness education for India. Bilingual, anonymous, judgement-free." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/PzbkNm8onYP9vuJ6vYwTMvgEd8W2/social-images/social-1779428356763-Speakeasy_India_social_banner_202605070358.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/PzbkNm8onYP9vuJ6vYwTMvgEd8W2/social-images/social-1779428356763-Speakeasy_India_social_banner_202605070358.webp" },
     ],
     links: [
       {
