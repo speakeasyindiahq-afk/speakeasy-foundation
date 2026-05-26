@@ -23,9 +23,13 @@ export const Route = createFileRoute("/sawal-jawab")({
         property: "og:description",
         content: "Stigma-free anonymous Q&A reviewed by Indian clinicians. Hindi + English.",
       },
-      { property: "og:url", content: "/sawal-jawab" },
+      { property: "og:url", content: "https://speakeasyindia.online/sawal-jawab" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Sawal Jawab — Anonymous Q&A — Speakeasy India" },
+      { name: "twitter:description", content: "Ask sexual wellness questions anonymously. No name, email, or phone required. Answered by verified Indian clinicians." },
     ],
-    links: [{ rel: "canonical", href: "/sawal-jawab" }],
+    links: [{ rel: "canonical", href: "https://speakeasyindia.online/sawal-jawab" }],
   }),
   component: SawalJawab,
 });
@@ -119,6 +123,25 @@ function SawalJawab() {
 
   return (
     <>
+      {publishedQ.data && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": publishedQ.data.slice(0, 15).map(q => ({
+                "@type": "Question",
+                "name": q.question_hi || q.question_en || "",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": q.answer_hi || q.answer_en || ""
+                }
+              }))
+            })
+          }}
+        />
+      )}
       {/* HERO */}
       <section
         className="border-b border-border/70"

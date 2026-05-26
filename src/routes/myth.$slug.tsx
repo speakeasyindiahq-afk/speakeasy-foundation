@@ -24,17 +24,19 @@ export const Route = createFileRoute("/myth/$slug")({
   },
   head: ({ params, loaderData }) => {
     const m = loaderData?.myth;
-    const title =
-      m?.seo_title_en ||
-      m?.myth_statement_en ||
-      m?.myth ||
-      "Myth — Speakeasy India";
-    const desc =
-      m?.seo_description_en ||
-      m?.truth_statement_en ||
-      m?.fact ||
-      "Myth vs Truth, reviewed by clinicians.";
-    const href = `/myth/${params.slug}`;
+    const titleEn = m?.seo_title_en || m?.myth_statement_en || m?.myth || "";
+    const titleHi = m?.seo_title_hi || m?.myth_statement_hi || m?.myth_hi || "";
+    const title = titleHi && titleEn && titleHi !== titleEn
+      ? `${titleHi} | ${titleEn}`
+      : (titleHi || titleEn || "Myth — Speakeasy India");
+
+    const descEn = m?.seo_description_en || m?.truth_statement_en || m?.fact || "";
+    const descHi = m?.seo_description_hi || m?.truth_statement_hi || m?.fact_hi || "";
+    const desc = descHi && descEn && descHi !== descEn
+      ? `${descHi} / ${descEn}`
+      : (descHi || descEn || "Myth vs Truth, reviewed by clinicians.");
+
+    const href = `https://speakeasyindia.online/myth/${params.slug}`;
     return {
       meta: [
         { title },
@@ -43,8 +45,27 @@ export const Route = createFileRoute("/myth/$slug")({
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
         { property: "og:url", content: href },
+        { name: "twitter:card", content: "summary" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: desc },
       ],
       links: [{ rel: "canonical", href }],
+      scripts: m ? [{
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: title,
+          description: desc,
+          datePublished: m.created_at,
+          author: m.experts ? { "@type": "Person", name: m.experts.name } : undefined,
+          publisher: {
+            "@type": "Organization",
+            name: "Speakeasy India",
+            url: "https://speakeasyindia.online",
+          }
+        }),
+      }] : [],
     };
   },
   component: MythPage,
@@ -74,7 +95,7 @@ function MythPage() {
   const shareUrl =
     typeof window !== "undefined"
       ? window.location.href
-      : `https://speakeasy.in/myth/${slug}`;
+      : `https://speakeasyindia.online/myth/${slug}`;
   const waText = `❌ MYTH: ${mythHi || myth.myth_statement_en || myth.myth || ""}\n✅ SACH: ${truthHi || myth.truth_statement_en || myth.fact || ""}\nPoora padhein: ${shareUrl}`;
   const waShare = `https://wa.me/?text=${encodeURIComponent(waText)}`;
 
@@ -225,6 +246,25 @@ function MythPage() {
             ))}
           </div>
         )}
+        <div className="mt-8 border-t border-border/60 pt-6">
+          <h3 className="text-sm font-semibold text-foreground">
+            {lang === "hi" ? "संबंधित माध्यम" : "Explore other formats"}
+          </h3>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Link
+              to="/learn"
+              className="rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:border-primary/40 hover:text-primary transition"
+            >
+              📖 {lang === "hi" ? "लेख पढ़ें" : "Read Articles"}
+            </Link>
+            <Link
+              to="/audio"
+              className="rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:border-primary/40 hover:text-primary transition"
+            >
+              🎧 {lang === "hi" ? "ऑडियो पाठ" : "Audio Lessons"}
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* CTAs */}

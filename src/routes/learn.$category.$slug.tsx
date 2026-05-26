@@ -29,9 +29,18 @@ export const Route = createFileRoute("/learn/$category/$slug")({
   },
   head: ({ params, loaderData }) => {
     const a = loaderData?.article;
-    const title = a?.seo_title || a?.title || "Article — Speakeasy India";
-    const desc = a?.seo_description || a?.excerpt || "Medically-reviewed educational article.";
-    const href = `/learn/${params.category}/${params.slug}`;
+    const titleEn = a?.seo_title || a?.title || "";
+    const titleHi = a?.seo_title_hi || a?.title_hi || "";
+    const title = titleHi && titleEn && titleHi !== titleEn
+      ? `${titleHi} | ${titleEn}`
+      : (titleHi || titleEn || "Article — Speakeasy India");
+
+    const descEn = a?.seo_description || a?.excerpt || "";
+    const descHi = a?.seo_description_hi || a?.excerpt_hi || "";
+    const desc = descHi && descEn && descHi !== descEn
+      ? `${descHi} / ${descEn}`
+      : (descHi || descEn || "Medically-reviewed educational article.");
+    const href = `https://speakeasyindia.online/learn/${params.category}/${params.slug}`;
     return {
       meta: [
         { title },
@@ -40,7 +49,13 @@ export const Route = createFileRoute("/learn/$category/$slug")({
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
         { property: "og:url", content: href },
-        ...(a?.cover_url ? [{ property: "og:image", content: a.cover_url }] : []),
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: desc },
+        ...(a?.cover_url ? [
+          { property: "og:image", content: a.cover_url },
+          { name: "twitter:image", content: a.cover_url }
+        ] : []),
       ],
       links: [{ rel: "canonical", href }],
       scripts: a ? [{
@@ -48,10 +63,16 @@ export const Route = createFileRoute("/learn/$category/$slug")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Article",
-          headline: a.title,
+          headline: title,
+          description: desc,
           image: a.cover_url || undefined,
           datePublished: a.created_at,
           author: a.experts ? { "@type": "Person", name: a.experts.name } : undefined,
+          publisher: {
+            "@type": "Organization",
+            name: "Speakeasy India",
+            url: "https://speakeasyindia.online",
+          }
         }),
       }] : [],
     };
@@ -126,7 +147,7 @@ function ArticlePage() {
 
   const shareUrl = typeof window !== "undefined"
     ? window.location.href
-    : `https://speakeasy.in/learn/${category}/${slug}`;
+    : `https://speakeasyindia.online/learn/${category}/${slug}`;
   const waShare = `https://wa.me/?text=${encodeURIComponent(`${title} — ${shareUrl}`)}`;
 
   return (
@@ -271,6 +292,25 @@ function ArticlePage() {
             {(relatedQ.data ?? []).map((a) => <ArticleCard key={a.id} a={a} lang={lang} />)}
           </div>
         )}
+        <div className="mt-8 border-t border-border/60 pt-6">
+          <h3 className="text-sm font-semibold text-foreground">
+            {lang === "hi" ? "संबंधित माध्यम" : "Explore other formats"}
+          </h3>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Link
+              to="/myth"
+              className="rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:border-primary/40 hover:text-primary transition"
+            >
+              ❓ {lang === "hi" ? "मिथक और सच" : "Myths vs Facts"}
+            </Link>
+            <Link
+              to="/audio"
+              className="rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:border-primary/40 hover:text-primary transition"
+            >
+              🎧 {lang === "hi" ? "ऑडियो पाठ" : "Audio Lessons"}
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* CTAs */}

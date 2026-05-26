@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SawalJawabRouteImport } from './routes/sawal-jawab'
 import { Route as ResourcesRouteImport } from './routes/resources'
@@ -38,6 +39,11 @@ import { Route as LearnCategorySlugRouteImport } from './routes/learn.$category.
 import { Route as AdminContentMythsRouteImport } from './routes/admin.content.myths'
 import { Route as AdminContentArticlesRouteImport } from './routes/admin.content.articles'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -193,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/audio': typeof AdminAudioRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
@@ -223,6 +230,7 @@ export interface FileRoutesByTo {
   '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/audio': typeof AdminAudioRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
@@ -254,6 +262,7 @@ export interface FileRoutesById {
   '/resources': typeof ResourcesRoute
   '/sawal-jawab': typeof SawalJawabRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/audio': typeof AdminAudioRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/homepage': typeof AdminHomepageRoute
@@ -286,6 +295,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sawal-jawab'
     | '/search'
+    | '/sitemap.xml'
     | '/admin/audio'
     | '/admin/dashboard'
     | '/admin/homepage'
@@ -316,6 +326,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sawal-jawab'
     | '/search'
+    | '/sitemap.xml'
     | '/admin/audio'
     | '/admin/dashboard'
     | '/admin/homepage'
@@ -346,6 +357,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sawal-jawab'
     | '/search'
+    | '/sitemap.xml'
     | '/admin/audio'
     | '/admin/dashboard'
     | '/admin/homepage'
@@ -377,10 +389,18 @@ export interface RootRouteChildren {
   ResourcesRoute: typeof ResourcesRoute
   SawalJawabRoute: typeof SawalJawabRoute
   SearchRoute: typeof SearchRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -666,6 +686,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResourcesRoute: ResourcesRoute,
   SawalJawabRoute: SawalJawabRoute,
   SearchRoute: SearchRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -10,7 +10,15 @@ export const Route = createFileRoute("/search")({
     meta: [
       { title: "Search — Speakeasy India" },
       { name: "description", content: "Search articles, myths, audio lessons, and anonymous Q&A across Speakeasy India." },
+      { property: "og:title", content: "Search — Speakeasy India" },
+      { property: "og:description", content: "Search articles, myths, audio lessons, and anonymous Q&A across Speakeasy India." },
+      { property: "og:url", content: "https://speakeasyindia.online/search" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Search — Speakeasy India" },
+      { name: "twitter:description", content: "Search articles, myths, audio lessons, and anonymous Q&A across Speakeasy India." },
     ],
+    links: [{ rel: "canonical", href: "https://speakeasyindia.online/search" }],
   }),
   component: SearchPage,
 });
@@ -45,7 +53,30 @@ function SearchPage() {
       const raw = localStorage.getItem(RECENT_KEY);
       if (raw) setRecent(JSON.parse(raw));
     } catch {}
+
+    // Read q parameter from URL on mount
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const queryParam = params.get("q");
+      if (queryParam) {
+        setQ(queryParam);
+      }
+    } catch {}
   }, []);
+
+  // Update URL search parameter when q changes
+  useEffect(() => {
+    try {
+      const url = new URL(window.location.href);
+      const term = q.trim();
+      if (term) {
+        url.searchParams.set("q", term);
+      } else {
+        url.searchParams.delete("q");
+      }
+      window.history.replaceState({}, "", url.pathname + url.search);
+    } catch {}
+  }, [q]);
 
   const saveRecent = (term: string) => {
     const cleaned = term.trim();

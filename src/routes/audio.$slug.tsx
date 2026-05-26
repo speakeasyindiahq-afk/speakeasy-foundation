@@ -23,9 +23,19 @@ export const Route = createFileRoute("/audio/$slug")({
   },
   head: ({ params, loaderData }) => {
     const ep = loaderData?.ep;
-    const title = ep?.seo_title || ep?.title || "Audio — Speakeasy India";
-    const desc = ep?.seo_description || ep?.description || "Audio lesson on Speakeasy India.";
-    const href = `/audio/${params.slug}`;
+    const titleEn = ep?.seo_title || ep?.title || "";
+    const titleHi = ep?.seo_title_hi || ep?.title_hi || "";
+    const title = titleHi && titleEn && titleHi !== titleEn
+      ? `${titleHi} | ${titleEn}`
+      : (titleHi || titleEn || "Audio — Speakeasy India");
+
+    const descEn = ep?.seo_description || ep?.description || "";
+    const descHi = ep?.seo_description_hi || ep?.description_hi || "";
+    const desc = descHi && descEn && descHi !== descEn
+      ? `${descHi} / ${descEn}`
+      : (descHi || descEn || "Audio lesson on Speakeasy India.");
+
+    const href = `https://speakeasyindia.online/audio/${params.slug}`;
     return {
       meta: [
         { title },
@@ -34,8 +44,32 @@ export const Route = createFileRoute("/audio/$slug")({
         { property: "og:description", content: desc },
         { property: "og:type", content: "music.song" },
         { property: "og:url", content: href },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: desc },
+        ...(ep?.cover_url ? [
+          { property: "og:image", content: ep.cover_url },
+          { name: "twitter:image", content: ep.cover_url }
+        ] : []),
       ],
       links: [{ rel: "canonical", href }],
+      scripts: ep ? [{
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: title,
+          description: desc,
+          image: ep.cover_url || undefined,
+          datePublished: ep.created_at,
+          author: ep.experts ? { "@type": "Person", name: ep.experts.name } : undefined,
+          publisher: {
+            "@type": "Organization",
+            name: "Speakeasy India",
+            url: "https://speakeasyindia.online",
+          }
+        }),
+      }] : [],
     };
   },
   component: AudioDetail,
@@ -167,6 +201,26 @@ function AudioDetail() {
         >
           <MessageCircle className="h-4 w-4" /> {t("article.share.wa")}
         </a>
+
+        <div className="mt-8 border-t border-border/60 pt-6">
+          <h3 className="text-sm font-semibold text-foreground">
+            {lang === "hi" ? "संबंधित माध्यम" : "Explore other formats"}
+          </h3>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Link
+              to="/learn"
+              className="rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:border-primary/40 hover:text-primary transition"
+            >
+              📖 {lang === "hi" ? "लेख पढ़ें" : "Read Articles"}
+            </Link>
+            <Link
+              to="/myth"
+              className="rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:border-primary/40 hover:text-primary transition"
+            >
+              ❓ {lang === "hi" ? "मिथक और सच" : "Myths vs Facts"}
+            </Link>
+          </div>
+        </div>
 
         <p className="mt-6 rounded-2xl border border-dashed border-border bg-card/60 p-4 text-xs leading-relaxed text-muted-foreground">
           {t("article.disclaimer")}

@@ -16,7 +16,35 @@ import {
 } from "@/lib/site-settings";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export const Route = createFileRoute("/")({ component: Index });
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Speakeasy India — Stigma-Free Sexual Wellness & Education" },
+      { name: "description", content: "India's trust-first, private sexual wellness education platform. Medically-reviewed lessons, myths corrected, and anonymous Q&A in Hindi and English." },
+      { property: "og:title", content: "Speakeasy India — Stigma-Free Sexual Wellness & Education" },
+      { property: "og:description", content: "India's trust-first, private sexual wellness education platform. Medically-reviewed lessons, myths corrected, and anonymous Q&A." },
+      { property: "og:url", content: "https://speakeasyindia.online" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Speakeasy India — Stigma-Free Sexual Wellness & Education" },
+      { name: "twitter:description", content: "India's trust-first, private sexual wellness education platform. Medically-reviewed lessons, myths corrected, and anonymous Q&A." },
+    ],
+    links: [{ rel: "canonical", href: "https://speakeasyindia.online" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Speakeasy India",
+          "url": "https://speakeasyindia.online",
+          "logo": "https://speakeasyindia.online/logo.png"
+        }),
+      },
+    ],
+  }),
+  component: Index,
+});
 
 const pick = (lang: Lang, hi?: string | null, en?: string | null) =>
   (lang === "hi" ? hi || en : en || hi) || "";
