@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ChevronRight, MessageCircle, MessageSquare, ThumbsUp, ThumbsDown, ShieldCheck, ExternalLink } from "lucide-react";
 import { useI18n, type Lang } from "@/lib/i18n";
 import { supabase } from "@/lib/supabase";
@@ -338,49 +338,285 @@ function ArticlePage() {
   );
 }
 
-/**
- * Renders body as editorial prose.
- * Markers:
- *   "> "  → pull quote (terracotta left border)
- *   "!> " → expert insight (sage panel)
- *   "## " → H2 section heading
- */
-function EditorialBody({ body, lang }: { body: string; lang: Lang }) {
-  const blocks = (body || "").split(/\n{2,}/).map((b) => b.trim()).filter(Boolean);
-  const fontFamily = lang === "hi" ? "var(--font-hindi)" : "var(--font-body)";
-  const fontSize = lang === "hi" ? "18px" : "16px";
+type ListItem = {
+  text: string;
+  indent: number;
+  listType: "ul" | "ol";
+};
+
+function parseInline(text: string): React.ReactNode {
+  if (!text) return "";
+  
+  const regex = /(\*\*.*?\*\*|__.*?__|`.*?`|\[.*?\]\(.*?\)|\*.*?\*|_.*?_)/g;
+  const parts = text.split(regex);
+  if (parts.length === 1) return text;
 
   return (
-    <div className="prose-editorial space-y-6" style={{ fontFamily, fontSize, lineHeight: 1.8, color: "var(--foreground)" }}>
-      {blocks.length === 0 && <p className="text-muted-foreground">—</p>}
-      {blocks.map((block, i) => {
-        if (block.startsWith("## ")) {
-          return <h2 key={i} className="!text-2xl !leading-tight pt-2">{block.slice(3)}</h2>;
+    <>
+      {parts.map((part, index) => {
+        if ((part.startsWith("**") && part.endsWith("**")) || (part.startsWith("__") && part.endsWith("__"))) {
+          const content = part.slice(2, -2);
+          return <strong key={index} className="font-bold text-foreground">{parseInline(content)}</strong>;
         }
-        if (block.startsWith("!> ")) {
+        if ((part.startsWith("*") && part.endsWith("*")) || (part.startsWith("_") && part.endsWith("_"))) {
+          const content = part.slice(1, -1);
+          return <em key={index} className="italic">{parseInline(content)}</em>;
+        }
+        if (part.startsWith("`") && part.endsWith("`")) {
           return (
-            <aside key={i} className="rounded-2xl p-5"
-              style={{
-                backgroundColor: "color-mix(in oklab, var(--sage) 14%, transparent)",
-                borderLeft: "4px solid var(--sage)",
-              }}>
-              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--sage)" }}>
-                ✦ Expert insight
-              </p>
-              <p className="mt-2">{block.slice(3)}</p>
-            </aside>
+            <code key={index} className="font-mono text-xs sm:text-sm bg-muted/60 border border-border/40 px-1.5 py-0.5 rounded text-primary">
+              {part.slice(1, -1)}
+            </code>
           );
         }
-        if (block.startsWith("> ")) {
-          return (
-            <blockquote key={i} className="pl-5 italic"
-              style={{ borderLeft: "4px solid var(--terracotta)", color: "var(--foreground)", fontFamily: "var(--font-display)", fontSize: "1.25rem", lineHeight: 1.5 }}>
-              {block.slice(2)}
-            </blockquote>
-          );
+        if (part.startsWith("[") && part.includes("](")) {
+          const match = part.match(/\[(.*?)\]\((.*?)\)/);
+          if (match) {
+            const [, linkText, url] = match;
+            return (
+              <a
+                key={index}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline underline-offset-4 decoration-primary/50 transition font-semibold"
+              >
+                {parseInline(linkText)}
+              </a>
+            );
+          }
         }
-        return <p key={i}>{block}</p>;
+        return part;
       })}
+    </>
+  );
+}
+
+function renderListTree(items: ListItem[]): React.ReactNode {
+  if (items.length === 0) return null;
+
+  const renderGroup = (startIndex: number, currentIndent: number): { elements: React.ReactNode[]; nextIndex: number } => {
+    const elements: React.ReactNode[] = [];
+    let i = startIndex;
+
+    while (i < items.length) {
+      const item = items[i];
+      if (item.indent < currentIndent) {
+        break;
+      }
+
+      if (item.indent > currentIndent) {
+        const subListType = item.listType;
+        const subResult = renderGroup(i, item.indent);
+        const sublist = subListType === "ol" 
+          ? <ol className="list-decimal pl-6 mt-1 space-y-1 marker:text-primary">{subResult.elements}</ol> 
+          : <ul className="list-disc pl-6 mt-1 space-y-1 marker:text-primary">{subResult.elements}</ul>;
+        
+        if (elements.length > 0) {
+          const lastIndex = elements.length - 1;
+          const lastElement = elements[lastIndex];
+          elements[lastIndex] = (
+            <div key={lastIndex} className="space-y-1">
+              {lastElement}
+              {sublist}
+            </div>
+          );
+        } else {
+          elements.push(<li key={`sub-${i}`} className="list-none">{sublist}</li>);
+        }
+        i = subResult.nextIndex;
+        continue;
+      }
+
+      const itemText = item.text;
+      let childrenNode: React.ReactNode = null;
+      if (i + 1 < items.length && items[i + 1].indent > currentIndent) {
+        const subResult = renderGroup(i + 1, items[i + 1].indent);
+        const subListType = items[i + 1].listType;
+        childrenNode = subListType === "ol"
+          ? <ol className="list-decimal pl-6 mt-1 space-y-1 marker:text-primary">{subResult.elements}</ol>
+          : <ul className="list-disc pl-6 mt-1 space-y-1 marker:text-primary">{subResult.elements}</ul>;
+        i = subResult.nextIndex - 1;
+      }
+
+      elements.push(
+        <li key={i} className="pl-1 text-foreground/90 leading-relaxed">
+          {parseInline(itemText)}
+          {childrenNode}
+        </li>
+      );
+      i++;
+    }
+
+    return { elements, nextIndex: i };
+  };
+
+  const firstItem = items[0];
+  const tree = renderGroup(0, firstItem.indent);
+  return firstItem.listType === "ol"
+    ? <ol className="list-decimal pl-6 space-y-2 my-4 marker:text-primary">{tree.elements}</ol>
+    : <ul className="list-disc pl-6 space-y-2 my-4 marker:text-primary">{tree.elements}</ul>;
+}
+
+function parseMarkdownToBlocks(body: string): React.ReactNode[] {
+  const lines = (body || "").replace(/\r\n/g, "\n").split("\n");
+  const elements: React.ReactNode[] = [];
+
+  let currentBlockType: "paragraph" | "blockquote" | "insight" | "list" | null = null;
+  let accumulatedLines: string[] = [];
+  let accumulatedListItems: ListItem[] = [];
+
+  const closeCurrentBlock = () => {
+    if (!currentBlockType) return;
+
+    const blockKey = elements.length;
+    if (currentBlockType === "paragraph") {
+      elements.push(
+        <p key={blockKey} className="leading-relaxed whitespace-pre-line my-4 text-foreground/90 font-normal">
+          {parseInline(accumulatedLines.join("\n"))}
+        </p>
+      );
+    } else if (currentBlockType === "blockquote") {
+      elements.push(
+        <blockquote key={blockKey} className="pl-5 italic border-l-4 my-6 py-1"
+          style={{ borderLeftColor: "var(--terracotta)", color: "var(--foreground)", fontFamily: "var(--font-display)", fontSize: "1.25rem", lineHeight: 1.5 }}>
+          {accumulatedLines.map((line, idx) => (
+            <p key={idx} className={idx > 0 ? "mt-2" : ""}>
+              {parseInline(line)}
+            </p>
+          ))}
+        </blockquote>
+      );
+    } else if (currentBlockType === "insight") {
+      elements.push(
+        <aside key={blockKey} className="rounded-2xl p-5 my-6 border-l-4"
+          style={{
+            backgroundColor: "color-mix(in oklab, var(--sage) 14%, transparent)",
+            borderLeftColor: "var(--sage)",
+          }}>
+          <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--sage)" }}>
+            ✦ Expert insight
+          </p>
+          <div className="mt-2 text-sm leading-relaxed text-foreground">
+            {accumulatedLines.map((line, idx) => (
+              <p key={idx} className={idx > 0 ? "mt-2" : ""}>
+                {parseInline(line)}
+              </p>
+            ))}
+          </div>
+        </aside>
+      );
+    } else if (currentBlockType === "list") {
+      elements.push(
+        <div key={blockKey} className="my-4">
+          {renderListTree(accumulatedListItems)}
+        </div>
+      );
+    }
+
+    currentBlockType = null;
+    accumulatedLines = [];
+    accumulatedListItems = [];
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmedLine = line.trim();
+
+    if (trimmedLine === "") {
+      closeCurrentBlock();
+      continue;
+    }
+
+    if (trimmedLine.startsWith("# ")) {
+      closeCurrentBlock();
+      elements.push(<h1 key={elements.length} className="text-3xl sm:text-4xl font-semibold font-display tracking-tight mt-8 mb-4 text-foreground leading-tight">{parseInline(trimmedLine.slice(2))}</h1>);
+      continue;
+    }
+    if (trimmedLine.startsWith("## ")) {
+      closeCurrentBlock();
+      elements.push(<h2 key={elements.length} className="text-2xl sm:text-3xl font-semibold font-display tracking-tight mt-8 mb-4 text-foreground pt-4 border-b border-border/40 pb-1.5 leading-tight">{parseInline(trimmedLine.slice(3))}</h2>);
+      continue;
+    }
+    if (trimmedLine.startsWith("### ")) {
+      closeCurrentBlock();
+      elements.push(<h3 key={elements.length} className="text-xl sm:text-2xl font-semibold font-display tracking-tight mt-6 mb-3 text-foreground leading-snug">{parseInline(trimmedLine.slice(4))}</h3>);
+      continue;
+    }
+
+    if (trimmedLine.startsWith("> ")) {
+      if (currentBlockType !== "blockquote") {
+        closeCurrentBlock();
+        currentBlockType = "blockquote";
+      }
+      accumulatedLines.push(trimmedLine.slice(2));
+      continue;
+    }
+
+    if (trimmedLine.startsWith("!> ")) {
+      if (currentBlockType !== "insight") {
+        closeCurrentBlock();
+        currentBlockType = "insight";
+      }
+      accumulatedLines.push(trimmedLine.slice(3));
+      continue;
+    }
+
+    const bulletMatch = line.match(/^(\s*)([-*])\s+(.*)$/);
+    const numberMatch = line.match(/^(\s*)(\d+)\.\s+(.*)$/);
+
+    if (bulletMatch) {
+      if (currentBlockType !== "list") {
+        closeCurrentBlock();
+        currentBlockType = "list";
+      }
+      const indent = bulletMatch[1].length;
+      const text = bulletMatch[3];
+      accumulatedListItems.push({
+        text,
+        indent,
+        listType: "ul"
+      });
+      continue;
+    }
+
+    if (numberMatch) {
+      if (currentBlockType !== "list") {
+        closeCurrentBlock();
+        currentBlockType = "list";
+      }
+      const indent = numberMatch[1].length;
+      const text = numberMatch[3];
+      accumulatedListItems.push({
+        text,
+        indent,
+        listType: "ol"
+      });
+      continue;
+    }
+
+    if (currentBlockType !== "paragraph") {
+      closeCurrentBlock();
+      currentBlockType = "paragraph";
+    }
+    accumulatedLines.push(line);
+  }
+
+  closeCurrentBlock();
+  return elements;
+}
+
+export function EditorialBody({ body, lang }: { body: string; lang: Lang }) {
+  const elements = useMemo(() => {
+    return parseMarkdownToBlocks(body);
+  }, [body]);
+
+  const fontFamily = lang === "hi" ? "var(--font-hindi)" : "var(--font-body)";
+  const fontSize = lang === "hi" ? "1.125rem" : "1.0625rem";
+
+  return (
+    <div className="prose prose-neutral max-w-none space-y-6" style={{ fontFamily, fontSize, lineHeight: 1.8, color: "var(--foreground)" }}>
+      {elements.length === 0 ? <p className="text-muted-foreground">—</p> : elements}
     </div>
   );
 }

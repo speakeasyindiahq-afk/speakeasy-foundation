@@ -4,6 +4,7 @@ import { Plus, Save, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { CATEGORIES } from "@/lib/categories";
 import type { Article, Expert } from "@/lib/site-settings";
+import { EditorialBody } from "@/routes/learn.$category.$slug";
 
 export const Route = createFileRoute("/admin/content/articles")({
   head: () => ({ meta: [{ title: "Articles — Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -23,6 +24,8 @@ function ArticlesAdmin() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [activeTabEn, setActiveTabEn] = useState<"edit" | "preview">("edit");
+  const [activeTabHi, setActiveTabHi] = useState<"edit" | "preview">("edit");
 
   async function refresh() {
     const [a, e] = await Promise.all([
@@ -144,8 +147,58 @@ function ArticlesAdmin() {
               </F>
               <F label="Excerpt (EN)" full><T value={draft.excerpt ?? ""} onChange={(v) => setDraft({ ...draft, excerpt: v })} rows={2} /></F>
               <F label="Excerpt (HI)" full><T value={draft.excerpt_hi ?? ""} onChange={(v) => setDraft({ ...draft, excerpt_hi: v })} rows={2} /></F>
-              <F label="Body (EN) — use ## H2, > quote, !> insight" full><T value={draft.body ?? ""} onChange={(v) => setDraft({ ...draft, body: v })} rows={8} /></F>
-              <F label="Body (HI)" full><T value={draft.body_hi ?? ""} onChange={(v) => setDraft({ ...draft, body_hi: v })} rows={8} /></F>
+              
+              <F label="Body (EN) — use ## H2, > quote, !> insight" full>
+                <div className="mb-2 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTabEn("edit")}
+                    className={`text-xs px-3 py-1 rounded-full border transition ${activeTabEn === "edit" ? "bg-primary text-white border-transparent" : "bg-muted text-muted-foreground border-border hover:bg-muted/80"}`}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTabEn("preview")}
+                    className={`text-xs px-3 py-1 rounded-full border transition ${activeTabEn === "preview" ? "bg-primary text-white border-transparent" : "bg-muted text-muted-foreground border-border hover:bg-muted/80"}`}
+                  >
+                    Preview
+                  </button>
+                </div>
+                {activeTabEn === "edit" ? (
+                  <T value={draft.body ?? ""} onChange={(v) => setDraft({ ...draft, body: v })} rows={10} />
+                ) : (
+                  <div className="rounded-xl border border-border bg-card/50 p-5 max-h-[400px] overflow-y-auto mt-1">
+                    <EditorialBody body={draft.body ?? ""} lang="en" />
+                  </div>
+                )}
+              </F>
+
+              <F label="Body (HI)" full>
+                <div className="mb-2 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTabHi("edit")}
+                    className={`text-xs px-3 py-1 rounded-full border transition ${activeTabHi === "edit" ? "bg-primary text-white border-transparent" : "bg-muted text-muted-foreground border-border hover:bg-muted/80"}`}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTabHi("preview")}
+                    className={`text-xs px-3 py-1 rounded-full border transition ${activeTabHi === "preview" ? "bg-primary text-white border-transparent" : "bg-muted text-muted-foreground border-border hover:bg-muted/80"}`}
+                  >
+                    Preview
+                  </button>
+                </div>
+                {activeTabHi === "edit" ? (
+                  <T value={draft.body_hi ?? ""} onChange={(v) => setDraft({ ...draft, body_hi: v })} rows={10} />
+                ) : (
+                  <div className="rounded-xl border border-border bg-card/50 p-5 max-h-[400px] overflow-y-auto mt-1">
+                    <EditorialBody body={draft.body_hi ?? ""} lang="hi" />
+                  </div>
+                )}
+              </F>
               <F label="Sources — one per line: Title | URL" full><T value={draft.sources_text ?? ""} onChange={(v) => setDraft({ ...draft, sources_text: v })} rows={4} /></F>
               <F label="Focus keyword"><I value={draft.focus_keyword ?? ""} onChange={(v) => setDraft({ ...draft, focus_keyword: v })} /></F>
               <div />
