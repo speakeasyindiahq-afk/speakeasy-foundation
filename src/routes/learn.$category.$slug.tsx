@@ -80,12 +80,15 @@ function ArticlePage() {
   const relatedQ = useQuery({
     queryKey: ["articles", "related", category, slug],
     queryFn: async () => {
-      const { data } = await supabase.from("articles").select("*")
+      const { data } = await supabase.from("articles")
+        .select("id,slug,title,title_hi,excerpt,excerpt_hi,cover_url,category,created_at")
         .eq("category", category).eq("status", "published")
         .neq("slug", slug)
         .order("created_at", { ascending: false }).limit(3);
       return (data ?? []) as Article[];
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   });
 
   async function sendFeedback(kind: "yes" | "no") {

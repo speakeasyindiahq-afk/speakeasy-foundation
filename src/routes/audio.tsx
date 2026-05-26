@@ -49,11 +49,14 @@ function AudioHub() {
     queryFn: async () => {
       const { data } = await supabase
         .from("audio_episodes")
-        .select("*, experts(name, credentials, avatar_url)")
+        .select("id,slug,title,title_hi,description,category,language,duration_seconds,duration_minutes,audio_url,experts(name, credentials, avatar_url)")
         .eq("status", "published")
         .order("created_at", { ascending: false });
       return (data ?? []) as (AudioEpisode & { experts?: Expert | null })[];
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+    retry: 1,
   });
 
   const filtered = useMemo(() => {

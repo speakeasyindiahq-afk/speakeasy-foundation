@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { fetchSiteSettings, settingString, type Expert } from "@/lib/site-settings";
 import { useI18n } from "@/lib/i18n";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -21,26 +22,28 @@ export const Route = createFileRoute("/about")({
 
 function AboutPage() {
   const { lang } = useI18n();
-  const [loading, setLoading] = useState(true);
-  const [s, setS] = useState<Record<string, unknown>>({});
-  const [experts, setExperts] = useState<Expert[]>([]);
+  const settingsQ = useQuery({
+    queryKey: ["site_settings"],
+    queryFn: fetchSiteSettings,
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 15,
+  });
+  const expertsQ = useQuery({
+    queryKey: ["experts", "active_details"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("experts")
+        .select("id,name,credentials,city,bio,avatar_url")
+        .eq("active", true);
+      return (data ?? []) as Expert[];
+    },
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 15,
+  });
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const [settings, e] = await Promise.all([
-          fetchSiteSettings(),
-          supabase.from("experts").select("*").eq("active", true),
-        ]);
-        setS(settings);
-        setExperts((e.data ?? []) as Expert[]);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  const s = settingsQ.data ?? {};
+  const experts = expertsQ.data ?? [];
+  const loading = settingsQ.isLoading || expertsQ.isLoading;
 
   const mission = settingString(s, lang === "hi" ? "about_mission_hi" : "about_mission_en");
   const founder = settingString(s, lang === "hi" ? "founder_note_hi" : "founder_note_en");

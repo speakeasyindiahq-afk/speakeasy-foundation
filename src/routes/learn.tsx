@@ -45,24 +45,32 @@ function Learn() {
       }));
       return counts;
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   });
 
   const recentQ = useQuery({
     queryKey: ["articles", "recent"],
     queryFn: async () => {
-      const { data } = await supabase.from("articles").select("*")
+      const { data } = await supabase.from("articles")
+        .select("id,slug,title,title_hi,excerpt,excerpt_hi,cover_url,category,created_at")
         .eq("status", "published").order("created_at", { ascending: false }).limit(6);
       return (data ?? []) as Article[];
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   });
 
   const popularQ = useQuery({
     queryKey: ["articles", "popular"],
     queryFn: async () => {
-      const { data } = await supabase.from("articles").select("*")
+      const { data } = await supabase.from("articles")
+        .select("id,slug,title,title_hi,excerpt,excerpt_hi,cover_url,category,created_at")
         .eq("status", "published").order("view_count", { ascending: false }).limit(6);
       return (data ?? []) as Article[];
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   });
 
   return (

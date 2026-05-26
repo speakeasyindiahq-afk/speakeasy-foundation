@@ -83,7 +83,7 @@ function MythPage() {
     queryFn: async () => {
       let q = supabase
         .from("myths")
-        .select("*")
+        .select("id,slug,myth,myth_hi,fact,fact_hi,myth_statement_hi,myth_statement_en,truth_statement_hi,truth_statement_en,category")
         .eq("status", "published")
         .neq("slug", slug)
         .order("created_at", { ascending: false })
@@ -92,6 +92,8 @@ function MythPage() {
       const { data } = await q;
       return (data ?? []) as Myth[];
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   });
 
   return (

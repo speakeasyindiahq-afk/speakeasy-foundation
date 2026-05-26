@@ -54,13 +54,16 @@ function CategoryPage() {
   const articlesQ = useQuery({
     queryKey: ["articles", "by-category", category, sub],
     queryFn: async () => {
-      let q = supabase.from("articles").select("*")
+      let q = supabase.from("articles")
+        .select("id,slug,title,title_hi,excerpt,excerpt_hi,cover_url,category,sub_category,created_at")
         .eq("category", category).eq("status", "published")
         .order("created_at", { ascending: false });
       if (sub) q = q.eq("sub_category", sub);
       const { data } = await q;
       return (data ?? []) as Article[];
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   });
 
   return (

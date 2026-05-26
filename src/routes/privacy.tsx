@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchSiteSettings, settingString } from "@/lib/site-settings";
 import { useI18n } from "@/lib/i18n";
 import { Shield } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -20,9 +21,13 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPage() {
   const { lang } = useI18n();
-  const [s, setS] = useState<Record<string, unknown>>({});
-
-  useEffect(() => { fetchSiteSettings().then(setS); }, []);
+  const settingsQ = useQuery({
+    queryKey: ["site_settings"],
+    queryFn: fetchSiteSettings,
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 15,
+  });
+  const s = settingsQ.data ?? {};
 
   const intro = settingString(s, lang === "hi" ? "privacy_intro_hi" : "privacy_intro_en");
   const dataUse = settingString(s, lang === "hi" ? "privacy_data_use_hi" : "privacy_data_use_en");

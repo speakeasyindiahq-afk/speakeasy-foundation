@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchSiteSettings } from "@/lib/site-settings";
 import { useI18n } from "@/lib/i18n";
 import { Phone, ExternalLink, HeartHandshake } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/resources")({
   head: () => ({
@@ -23,8 +24,13 @@ type Link = { name: string; url: string; desc?: string };
 
 function ResourcesPage() {
   const { lang } = useI18n();
-  const [s, setS] = useState<Record<string, unknown>>({});
-  useEffect(() => { fetchSiteSettings().then(setS); }, []);
+  const settingsQ = useQuery({
+    queryKey: ["site_settings"],
+    queryFn: fetchSiteSettings,
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 15,
+  });
+  const s = settingsQ.data ?? {};
 
   const crisisKeys = ["crisis_icall", "crisis_vandrevala", "crisis_pcvc", "crisis_ncw", "crisis_childline"];
   const crisis = crisisKeys.map((k) => s[k] as Crisis | undefined).filter(Boolean) as Crisis[];

@@ -37,11 +37,13 @@ function MythHub() {
     queryFn: async () => {
       const { data } = await supabase
         .from("myths")
-        .select("*")
+        .select("id,slug,myth,myth_hi,fact,fact_hi,myth_statement_hi,myth_statement_en,truth_statement_hi,truth_statement_en,category")
         .eq("status", "published")
         .order("created_at", { ascending: false });
       return (data ?? []) as Myth[];
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   });
 
   const filtered = useMemo(() => {

@@ -24,44 +24,70 @@ const pick = (lang: Lang, hi?: string | null, en?: string | null) =>
 function Index() {
   const { t, lang } = useI18n();
 
-  const settingsQ = useQuery({ queryKey: ["site_settings"], queryFn: fetchSiteSettings });
+  const settingsQ = useQuery({
+    queryKey: ["site_settings"],
+    queryFn: fetchSiteSettings,
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 15,
+  });
   const settings = settingsQ.data ?? {};
 
   const articlesQ = useQuery({
     queryKey: ["articles", "featured"],
     queryFn: async () => {
       const { data } = await supabase
-        .from("articles").select("*").eq("status", "published")
-        .order("created_at", { ascending: false }).limit(3);
+        .from("articles")
+        .select("id,slug,title,title_hi,excerpt,excerpt_hi,cover_url,category,created_at")
+        .eq("status", "published")
+        .order("created_at", { ascending: false })
+        .limit(3);
       return (data ?? []) as Article[];
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   });
 
   const mythQ = useQuery({
     queryKey: ["myths", "latest"],
     queryFn: async () => {
       const { data } = await supabase
-        .from("myths").select("*").eq("status", "published")
-        .order("created_at", { ascending: false }).limit(1);
+        .from("myths")
+        .select("id,slug,myth,myth_hi,fact,fact_hi,myth_statement_en,myth_statement_hi,truth_statement_en,truth_statement_hi")
+        .eq("status", "published")
+        .order("created_at", { ascending: false })
+        .limit(1);
       return ((data ?? [])[0] ?? null) as Myth | null;
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   });
 
   const audioQ = useQuery({
     queryKey: ["audio_episodes", "featured"],
     queryFn: async () => {
       const { data } = await supabase
-        .from("audio_episodes").select("*").eq("status", "published").limit(3);
+        .from("audio_episodes")
+        .select("id,slug,title,title_hi,duration_minutes,description,audio_url")
+        .eq("status", "published")
+        .limit(3);
       return (data ?? []) as AudioEpisode[];
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   });
 
   const expertsQ = useQuery({
     queryKey: ["experts", "active"],
     queryFn: async () => {
-      const { data } = await supabase.from("experts").select("*").eq("active", true).limit(4);
+      const { data } = await supabase
+        .from("experts")
+        .select("id,name,avatar_url")
+        .eq("active", true)
+        .limit(4);
       return (data ?? []) as Expert[];
     },
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 15,
   });
 
   const waUrl = settingString(settings, "whatsapp_channel_url", "https://whatsapp.com/channel/your-channel");
