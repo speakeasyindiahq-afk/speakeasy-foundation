@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { fetchSiteSettings, settingString, type Expert } from "@/lib/site-settings";
 import { useI18n } from "@/lib/i18n";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -20,17 +21,24 @@ export const Route = createFileRoute("/about")({
 
 function AboutPage() {
   const { lang } = useI18n();
+  const [loading, setLoading] = useState(true);
   const [s, setS] = useState<Record<string, unknown>>({});
   const [experts, setExperts] = useState<Expert[]>([]);
 
   useEffect(() => {
     (async () => {
-      const [settings, e] = await Promise.all([
-        fetchSiteSettings(),
-        supabase.from("experts").select("*").eq("active", true),
-      ]);
-      setS(settings);
-      setExperts((e.data ?? []) as Expert[]);
+      try {
+        const [settings, e] = await Promise.all([
+          fetchSiteSettings(),
+          supabase.from("experts").select("*").eq("active", true),
+        ]);
+        setS(settings);
+        setExperts((e.data ?? []) as Expert[]);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, []);
 
@@ -83,7 +91,20 @@ function AboutPage() {
       </Section>
 
       <Section title={lang === "hi" ? "सलाहकार बोर्ड" : "Advisory & expert board"}>
-        {experts.length === 0 ? (
+        {loading ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex gap-4 rounded-xl border border-border bg-card p-4 animate-pulse">
+                <Skeleton className="h-14 w-14 shrink-0 rounded-full" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-1/3" />
+                  <Skeleton className="h-3 w-1/4" />
+                  <Skeleton className="h-3.5 w-full mt-2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : experts.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             {lang === "hi" ? "जल्द ही जोड़ा जा रहा है।" : "Being added soon."}
           </p>
@@ -92,7 +113,7 @@ function AboutPage() {
             {experts.map((ex) => (
               <div key={ex.id} className="flex gap-4 rounded-xl border border-border bg-card p-4">
                 <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full bg-muted">
-                  {ex.avatar_url && <img src={ex.avatar_url} alt={ex.name} className="h-full w-full object-cover" />}
+                  {ex.avatar_url && <img src={ex.avatar_url} alt={ex.name} className="h-full w-full object-cover" loading="lazy" />}
                 </div>
                 <div>
                   <p className="font-semibold">{ex.name}</p>

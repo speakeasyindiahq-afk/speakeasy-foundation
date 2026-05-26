@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { useI18n, type Lang } from "@/lib/i18n";
 import type { AudioEpisode, Expert } from "@/lib/site-settings";
 import { AUDIO_CATEGORIES, audioCategoryLabel } from "@/lib/audio-categories";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/audio")({
   head: () => ({
@@ -112,7 +113,22 @@ function AudioHub() {
 
       <section className="mx-auto max-w-[680px] px-5 py-10 pb-36">
         {epsQ.isLoading ? (
-          <p className="text-sm text-muted-foreground">…</p>
+          <div className="grid grid-cols-2 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex flex-col rounded-2xl border border-border bg-card p-4 space-y-3 animate-pulse">
+                <div className="flex items-start justify-between gap-2">
+                  <Skeleton className="h-12 w-12 rounded-xl" />
+                  <Skeleton className="h-4 w-8 rounded-full" />
+                </div>
+                <Skeleton className="h-5 w-5/6" />
+                <Skeleton className="h-3 w-1/3" />
+                <div className="mt-3 flex items-center justify-between">
+                  <Skeleton className="h-3 w-12" />
+                  <Skeleton className="h-9 w-9 rounded-full" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : filtered.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-border bg-card/50 px-4 py-6 text-sm text-muted-foreground">
             {lang === "hi" ? "इस श्रेणी में अभी कोई ऑडियो नहीं है।" : "No audio yet in this category."}

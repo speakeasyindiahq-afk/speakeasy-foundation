@@ -14,6 +14,7 @@ import {
   fetchSiteSettings, settingString,
   type Article, type Myth, type AudioEpisode, type Expert,
 } from "@/lib/site-settings";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/")({ component: Index });
 
@@ -200,31 +201,48 @@ function Index() {
       <section className="mx-auto max-w-[680px] px-5 py-12">
         <SectionHeader eyebrow={t("nav.learn")} title={t("home.featured.title")} subtitle={t("home.featured.subtitle")} />
         <div className="mt-6 -mx-5 flex gap-3 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:px-0">
-          {(articlesQ.data ?? placeholderArticles).map((a) => (
-            <article
-              key={a.id}
-              className="min-w-[260px] flex-1 overflow-hidden rounded-2xl border border-border bg-card shadow-sm sm:min-w-0"
-            >
-              <div
-                className="aspect-[16/10] w-full"
-                style={{
-                  backgroundImage: a.cover_url ? `url(${a.cover_url})` : undefined,
-                  backgroundSize: "cover", backgroundPosition: "center",
-                  backgroundColor: "color-mix(in oklab, var(--terracotta) 12%, var(--ivory))",
-                }}
-              />
-              <div className="p-4">
-                {a.category && <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "var(--terracotta)" }}>{a.category}</span>}
-                <h3 className="mt-1 text-base font-semibold leading-snug">{pick(lang, a.title_hi, a.title)}</h3>
-                {(a.excerpt || a.excerpt_hi) && (
-                  <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{pick(lang, a.excerpt_hi, a.excerpt)}</p>
-                )}
-                <Link to="/learn" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold" style={{ color: "var(--terracotta)" }}>
-                  {t("home.featured.read")} <ArrowRight className="h-3 w-3" />
-                </Link>
+          {articlesQ.isLoading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="min-w-[260px] flex-1 overflow-hidden rounded-2xl border border-border bg-card shadow-sm sm:min-w-0">
+                <Skeleton className="aspect-[16/10] w-full rounded-none" />
+                <div className="p-4 space-y-2">
+                  <Skeleton className="h-3 w-16" />
+                  <Skeleton className="h-5 w-5/6" />
+                  <Skeleton className="h-3 w-full" />
+                  <Skeleton className="h-3 w-2/3" />
+                  <Skeleton className="h-4 w-12 mt-3" />
+                </div>
               </div>
-            </article>
-          ))}
+            ))
+          ) : (
+            (articlesQ.data ?? placeholderArticles).map((a) => (
+              <article
+                key={a.id}
+                className="min-w-[260px] flex-1 overflow-hidden rounded-2xl border border-border bg-card shadow-sm sm:min-w-0"
+              >
+                <div className="aspect-[16/10] w-full overflow-hidden bg-[color-mix(in_oklab,var(--terracotta)_12%,var(--ivory))]">
+                  {a.cover_url && (
+                    <img
+                      src={a.cover_url}
+                      alt={pick(lang, a.title_hi, a.title)}
+                      className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                      loading="lazy"
+                    />
+                  )}
+                </div>
+                <div className="p-4">
+                  {a.category && <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "var(--terracotta)" }}>{a.category}</span>}
+                  <h3 className="mt-1 text-base font-semibold leading-snug">{pick(lang, a.title_hi, a.title)}</h3>
+                  {(a.excerpt || a.excerpt_hi) && (
+                    <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{pick(lang, a.excerpt_hi, a.excerpt)}</p>
+                  )}
+                  <Link to="/learn" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold" style={{ color: "var(--terracotta)" }}>
+                    {t("home.featured.read")} <ArrowRight className="h-3 w-3" />
+                  </Link>
+                </div>
+              </article>
+            ))
+          )}
         </div>
       </section>
 
@@ -236,7 +254,22 @@ function Index() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--terracotta)" }}>
             {t("home.myth.eyebrow")}
           </p>
-          {(() => {
+          {mythQ.isLoading ? (
+            <div className="mt-4 overflow-hidden rounded-3xl border border-border bg-card shadow-sm animate-pulse">
+              <div className="grid sm:grid-cols-2">
+                <div className="p-6 space-y-3 bg-[color-mix(in_oklab,var(--destructive)_8%,transparent)]">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-6 w-5/6 bg-destructive/10" />
+                  <Skeleton className="h-6 w-3/4 bg-destructive/10" />
+                </div>
+                <div className="p-6 space-y-3 bg-[color-mix(in_oklab,var(--sage)_10%,transparent)]">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-6 w-5/6 bg-sage/10" />
+                  <Skeleton className="h-6 w-3/4 bg-sage/10" />
+                </div>
+              </div>
+            </div>
+          ) : (() => {
             const m = mythQ.data ?? placeholderMyth;
             return (
               <div className="mt-4 overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
@@ -285,24 +318,40 @@ function Index() {
       <section className="mx-auto max-w-[680px] px-5 py-12">
         <SectionHeader eyebrow={t("nav.audio")} title={t("home.audio.title")} subtitle={t("home.audio.subtitle")} />
         <div className="mt-6 -mx-5 flex gap-3 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:px-0">
-          {(audioQ.data ?? placeholderAudio).map((ep) => (
-            <article key={ep.id} className="min-w-[240px] flex-1 rounded-2xl border border-border bg-card p-4 shadow-sm sm:min-w-0">
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: "var(--terracotta)" }}>
-                  <Play className="h-5 w-5" />
+          {audioQ.isLoading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="min-w-[240px] flex-1 rounded-2xl border border-border bg-card p-4 shadow-sm sm:min-w-0 space-y-3">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-12 w-12 shrink-0 rounded-2xl" />
+                  <div className="flex-1 space-y-2 min-w-0">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-1/3" />
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="truncate text-sm font-semibold">{pick(lang, ep.title_hi, ep.title)}</h3>
-                  {ep.duration_minutes != null && (
-                    <span className="mt-0.5 inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                      <Clock className="h-3 w-3" /> {ep.duration_minutes} {t("home.audio.minutes")}
-                    </span>
-                  )}
-                </div>
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-3 w-5/6" />
               </div>
-              {ep.description && <p className="mt-3 text-xs text-muted-foreground line-clamp-2">{ep.description}</p>}
-            </article>
-          ))}
+            ))
+          ) : (
+            (audioQ.data ?? placeholderAudio).map((ep) => (
+              <article key={ep.id} className="min-w-[240px] flex-1 rounded-2xl border border-border bg-card p-4 shadow-sm sm:min-w-0">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: "var(--terracotta)" }}>
+                    <Play className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="truncate text-sm font-semibold">{pick(lang, ep.title_hi, ep.title)}</h3>
+                    {ep.duration_minutes != null && (
+                      <span className="mt-0.5 inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                        <Clock className="h-3 w-3" /> {ep.duration_minutes} {t("home.audio.minutes")}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {ep.description && <p className="mt-3 text-xs text-muted-foreground line-clamp-2">{ep.description}</p>}
+              </article>
+            ))
+          )}
         </div>
       </section>
 
@@ -313,28 +362,46 @@ function Index() {
           <h2 className="mt-3 text-3xl leading-tight">{t("home.trust.title")}</h2>
           <p className="mt-3 max-w-xl text-muted-foreground">{t("home.trust.body")}</p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4">
-            <div className="flex -space-x-3">
-              {(expertsQ.data ?? placeholderExperts).map((ex) => (
-                <div
-                  key={ex.id}
-                  title={ex.name}
-                  className="h-12 w-12 rounded-full border-2 border-background bg-card text-center text-xs font-semibold leading-[44px]"
-                  style={{
-                    backgroundImage: ex.avatar_url ? `url(${ex.avatar_url})` : undefined,
-                    backgroundSize: "cover", backgroundPosition: "center",
-                    color: "var(--sage)",
-                  }}
-                >
-                  {!ex.avatar_url && ex.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
-                </div>
-              ))}
+          {expertsQ.isLoading ? (
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              <div className="flex -space-x-3">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton key={i} className="h-12 w-12 rounded-full border-2 border-background" />
+                ))}
+              </div>
+              <div className="space-y-1 text-sm">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-3 w-40" />
+              </div>
             </div>
-            <div className="text-sm">
-              <div className="font-semibold">{(expertsQ.data ?? placeholderExperts).length}+ {lang === "hi" ? "विशेषज्ञ" : "experts"}</div>
-              <div className="text-muted-foreground">{lang === "hi" ? "डॉक्टर · परामर्शदाता · शिक्षक" : "Doctors · counsellors · educators"}</div>
+          ) : (
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              <div className="flex -space-x-3">
+                {(expertsQ.data ?? placeholderExperts).map((ex) => (
+                  <div
+                    key={ex.id}
+                    title={ex.name}
+                    className="h-12 w-12 overflow-hidden rounded-full border-2 border-background bg-card text-center text-xs font-semibold flex items-center justify-center text-[var(--sage)]"
+                  >
+                    {ex.avatar_url ? (
+                      <img
+                        src={ex.avatar_url}
+                        alt={ex.name}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span>{ex.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="text-sm">
+                <div className="font-semibold">{(expertsQ.data ?? placeholderExperts).length}+ {lang === "hi" ? "विशेषज्ञ" : "experts"}</div>
+                <div className="text-muted-foreground">{lang === "hi" ? "डॉक्टर · परामर्शदाता · शिक्षक" : "Doctors · counsellors · educators"}</div>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="mt-8"><CrisisSupport /></div>
         </div>

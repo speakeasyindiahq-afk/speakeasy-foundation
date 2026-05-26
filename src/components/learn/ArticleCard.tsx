@@ -28,14 +28,16 @@ export function ArticleCard({ a, lang }: { a: Article; lang: Lang }) {
 function CardInner({ a, lang }: { a: Article; lang: Lang }) {
   return (
     <>
-      <div
-        className="aspect-[16/10] w-full"
-        style={{
-          backgroundImage: a.cover_url ? `url(${a.cover_url})` : undefined,
-          backgroundSize: "cover", backgroundPosition: "center",
-          backgroundColor: "color-mix(in oklab, var(--terracotta) 10%, var(--ivory))",
-        }}
-      />
+      <div className="aspect-[16/10] w-full overflow-hidden bg-[color-mix(in_oklab,var(--terracotta)_10%,var(--ivory))]">
+        {a.cover_url && (
+          <img
+            src={a.cover_url}
+            alt={pick(lang, a.title_hi, a.title)}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+        )}
+      </div>
       <div className="p-4">
         {a.category && (
           <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "var(--terracotta)" }}>

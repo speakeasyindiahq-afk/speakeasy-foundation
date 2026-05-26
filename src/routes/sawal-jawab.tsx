@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { useI18n } from "@/lib/i18n";
 import { CATEGORIES, categoryLabel } from "@/lib/categories";
 import type { Expert } from "@/lib/site-settings";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/sawal-jawab")({
   head: () => ({
@@ -357,7 +358,17 @@ function SawalJawab() {
 
         <div className="mt-5 grid gap-4">
           {publishedQ.isLoading && (
-            <p className="text-sm text-muted-foreground">…</p>
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="rounded-2xl border border-border bg-card p-5 space-y-3 animate-pulse">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-5 w-5/6" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-2/3" />
+                <div className="flex gap-2 pt-2">
+                  <Skeleton className="h-4 w-24" />
+                </div>
+              </div>
+            ))
           )}
           {!publishedQ.isLoading && filtered.length === 0 && (
             <p className="rounded-2xl border border-dashed border-border bg-card/50 px-4 py-6 text-sm text-muted-foreground">

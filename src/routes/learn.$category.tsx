@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { getCategory, CATEGORIES } from "@/lib/categories";
 import { ArticleCard } from "@/components/learn/ArticleCard";
 import type { Article } from "@/lib/site-settings";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/learn/$category")({
   beforeLoad: ({ params }) => {
@@ -107,7 +108,19 @@ function CategoryPage() {
 
       <section className="mx-auto max-w-[680px] px-5 py-10">
         {articlesQ.isLoading ? (
-          <p className="text-sm text-muted-foreground">…</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm space-y-2 animate-pulse">
+                <Skeleton className="aspect-[16/10] w-full rounded-none" />
+                <div className="p-4 space-y-2">
+                  <Skeleton className="h-3 w-16" />
+                  <Skeleton className="h-5 w-5/6" />
+                  <Skeleton className="h-3 w-full" />
+                  <Skeleton className="h-4 w-12 mt-3" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (articlesQ.data?.length ?? 0) === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-card/50 px-5 py-10 text-center">
             <p className="text-sm text-muted-foreground">{t("learn.empty")}</p>

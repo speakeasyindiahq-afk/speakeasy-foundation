@@ -3,6 +3,7 @@ import { Search as SearchIcon, X, BookOpen, AlertCircle, Headphones, MessageSqua
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { supabase } from "@/lib/supabase";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/search")({
   head: () => ({
@@ -190,7 +191,22 @@ function SearchPage() {
 
       {q.trim().length >= 2 && (
         <div className="mt-6">
-          {loading && <p className="text-sm text-muted-foreground">{t("search.loading")}</p>}
+          {loading && (
+            <div className="flex flex-col gap-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="rounded-xl border border-border bg-card p-4 space-y-3 animate-pulse">
+                  <div className="flex items-start gap-3">
+                    <Skeleton className="h-8 w-8 rounded-full shrink-0" />
+                    <div className="min-w-0 flex-1 space-y-2">
+                      <Skeleton className="h-3 w-20" />
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-3.5 w-5/6" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           {!loading && filtered.length === 0 && (
             <div className="rounded-2xl border border-dashed border-border bg-card px-5 py-10 text-center">
               <p className="text-sm text-muted-foreground">{t("search.noResults")}</p>

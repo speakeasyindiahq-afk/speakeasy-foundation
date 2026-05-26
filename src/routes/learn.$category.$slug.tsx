@@ -7,6 +7,7 @@ import { getCategory, categoryLabel } from "@/lib/categories";
 import { ArticleCard } from "@/components/learn/ArticleCard";
 import type { Article, Expert } from "@/lib/site-settings";
 import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const pick = (lang: Lang, hi?: string | null, en?: string | null) =>
   (lang === "hi" ? hi || en : en || hi) || "";
@@ -155,15 +156,17 @@ function ArticlePage() {
           {/* Byline */}
           {expert && (
             <div className="mt-6 flex items-center gap-3 rounded-2xl border border-border bg-card/70 p-3 backdrop-blur">
-              <div
-                className="h-11 w-11 shrink-0 rounded-full bg-muted text-center text-xs font-semibold leading-[44px]"
-                style={{
-                  backgroundImage: expert.avatar_url ? `url(${expert.avatar_url})` : undefined,
-                  backgroundSize: "cover", backgroundPosition: "center",
-                  color: "var(--sage)",
-                }}
-              >
-                {!expert.avatar_url && expert.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+              <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-muted text-center text-xs font-semibold flex items-center justify-center text-[var(--sage)]">
+                {expert.avatar_url ? (
+                  <img
+                    src={expert.avatar_url}
+                    alt={expert.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span>{expert.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}</span>
+                )}
               </div>
               <div className="min-w-0 flex-1 text-xs">
                 <div className="font-semibold text-foreground">{t("article.reviewedBy")} {expert.name}</div>
@@ -180,8 +183,8 @@ function ArticlePage() {
 
       {article.cover_url && (
         <div className="mx-auto max-w-[680px] px-5 pt-8">
-          <div className="overflow-hidden rounded-3xl border border-border">
-            <img src={article.cover_url} alt={title} className="w-full" loading="eager" />
+          <div className="aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden rounded-3xl border border-border bg-[color-mix(in_oklab,var(--terracotta)_10%,var(--ivory))]">
+            <img src={article.cover_url} alt={title} className="h-full w-full object-cover" loading="eager" />
           </div>
         </div>
       )}
@@ -245,7 +248,20 @@ function ArticlePage() {
       {/* RELATED */}
       <section className="mx-auto max-w-[680px] px-5 py-12">
         <h2 className="text-xl">{t("article.related")}</h2>
-        {(relatedQ.data?.length ?? 0) === 0 ? (
+        {relatedQ.isLoading ? (
+          <div className="mt-5 grid gap-4 sm:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm space-y-2 animate-pulse">
+                <Skeleton className="aspect-[16/10] w-full rounded-none" />
+                <div className="p-4 space-y-2">
+                  <Skeleton className="h-3 w-12" />
+                  <Skeleton className="h-4 w-5/6" />
+                  <Skeleton className="h-3 w-10 mt-2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (relatedQ.data?.length ?? 0) === 0 ? (
           <p className="mt-3 text-sm text-muted-foreground">—</p>
         ) : (
           <div className="mt-5 grid gap-4 sm:grid-cols-3">

@@ -6,6 +6,7 @@ import { CATEGORIES } from "@/lib/categories";
 import { supabase } from "@/lib/supabase";
 import { ArticleCard } from "@/components/learn/ArticleCard";
 import type { Article } from "@/lib/site-settings";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/learn")({
   head: () => ({
@@ -127,8 +128,12 @@ function Learn() {
                   <h3 className="text-sm font-semibold leading-tight">{lang === "hi" ? c.hi : c.en}</h3>
                   <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{lang === "hi" ? c.desc_hi : c.desc_en}</p>
                 </div>
-                <span className="text-[11px] text-muted-foreground">
-                  {count} {count === 1 ? t("learn.articleCount.one") : t("learn.articleCount.many")}
+                <span className="text-[11px] text-muted-foreground min-h-[16px] inline-flex items-center">
+                  {countsQ.isLoading ? (
+                    <Skeleton className="h-3 w-12" />
+                  ) : (
+                    `${count} ${count === 1 ? t("learn.articleCount.one") : t("learn.articleCount.many")}`
+                  )}
                 </span>
               </Link>
             );
@@ -141,7 +146,7 @@ function Learn() {
       {/* RECENT */}
       <section className="mx-auto max-w-[680px] px-5 py-12">
         <SectionHeader eyebrow={t("learn.recent")} title={lang === "hi" ? "ताज़ा पाठ" : "Fresh from the desk"} />
-        <ArticleStrip items={recentQ.data ?? []} lang={lang} emptyLabel={t("learn.empty")} />
+        <ArticleStrip items={recentQ.data ?? []} lang={lang} emptyLabel={t("learn.empty")} isLoading={recentQ.isLoading} />
       </section>
 
       <SectionDivider />
@@ -149,7 +154,7 @@ function Learn() {
       {/* POPULAR */}
       <section className="mx-auto max-w-[680px] px-5 py-12">
         <SectionHeader eyebrow={t("learn.popular")} title={lang === "hi" ? "पाठकों की पसंद" : "Reader favourites"} />
-        <ArticleStrip items={popularQ.data ?? []} lang={lang} emptyLabel={t("learn.empty")} />
+        <ArticleStrip items={popularQ.data ?? []} lang={lang} emptyLabel={t("learn.empty")} isLoading={popularQ.isLoading} />
       </section>
     </>
   );
@@ -177,7 +182,24 @@ function SectionDivider() {
   );
 }
 
-function ArticleStrip({ items, lang, emptyLabel }: { items: Article[]; lang: "en" | "hi"; emptyLabel: string }) {
+function ArticleStrip({ items, lang, emptyLabel, isLoading }: { items: Article[]; lang: "en" | "hi"; emptyLabel: string; isLoading?: boolean }) {
+  if (isLoading) {
+    return (
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm space-y-2">
+            <Skeleton className="aspect-[16/10] w-full rounded-none" />
+            <div className="p-4 space-y-2">
+              <Skeleton className="h-3 w-16" />
+              <Skeleton className="h-5 w-5/6" />
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-4 w-12 mt-3" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
   if (!items.length) {
     return <p className="mt-6 rounded-2xl border border-dashed border-border bg-card/50 px-4 py-6 text-sm text-muted-foreground">{emptyLabel}</p>;
   }

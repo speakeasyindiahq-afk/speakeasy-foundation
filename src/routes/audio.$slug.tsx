@@ -94,16 +94,17 @@ function AudioDetail() {
 
           {expert && (
             <div className="mt-5 flex items-center gap-3 rounded-2xl border border-border bg-card/70 p-3 backdrop-blur">
-              <div
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
-                style={{
-                  backgroundImage: expert.avatar_url ? `url(${expert.avatar_url})` : undefined,
-                  backgroundSize: "cover",
-                  backgroundColor: "var(--muted)",
-                  color: "var(--sage)",
-                }}
-              >
-                {!expert.avatar_url && expert.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+              <div className="flex h-11 w-11 shrink-0 overflow-hidden rounded-full bg-muted text-center text-xs font-semibold items-center justify-center text-[var(--sage)]">
+                {expert.avatar_url ? (
+                  <img
+                    src={expert.avatar_url}
+                    alt={expert.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span>{expert.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}</span>
+                )}
               </div>
               <div className="min-w-0 flex-1 text-xs">
                 <div className="font-semibold text-foreground">

@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import type { Myth } from "@/lib/site-settings";
 import { MYTH_CATEGORIES } from "@/lib/myth-categories";
 import { MythCard } from "@/components/myth/MythCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/myth")({
   head: () => ({
@@ -101,7 +102,26 @@ function MythHub() {
       {/* MYTH GRID */}
       <section className="mx-auto max-w-[680px] px-5 py-12">
         {mythsQ.isLoading ? (
-          <p className="text-sm text-muted-foreground">…</p>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-4 animate-pulse" style={{ borderLeft: "4px solid #C0392B" }}>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className="h-5 w-5/6" />
+                  <Skeleton className="h-5 w-2/3" />
+                </div>
+                <div className="flex items-center gap-2 opacity-50">
+                  <span className="h-px flex-1 bg-muted" />
+                  <span className="text-[10px] text-muted-foreground">✦</span>
+                  <span className="h-px flex-1 bg-muted" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-16 bg-sage/10" />
+                  <Skeleton className="h-5 w-5/6 bg-sage/10" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : filtered.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-border bg-card/50 px-4 py-6 text-sm text-muted-foreground">
             {t("myth.empty")}

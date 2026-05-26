@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import type { Myth, Expert } from "@/lib/site-settings";
 import { mythCategoryLabel } from "@/lib/myth-categories";
 import { MythCard } from "@/components/myth/MythCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const pick = (lang: Lang, hi?: string | null, en?: string | null) =>
   (lang === "hi" ? hi || en : en || hi) || "";
@@ -126,21 +127,23 @@ function MythPage() {
 
           {expert && (
             <div className="mt-6 flex items-center gap-3 rounded-2xl border border-border bg-card/70 p-3 backdrop-blur">
-              <div
-                className="h-11 w-11 shrink-0 rounded-full bg-muted text-center text-xs font-semibold leading-[44px]"
-                style={{
-                  backgroundImage: expert.avatar_url ? `url(${expert.avatar_url})` : undefined,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  color: "var(--sage)",
-                }}
-              >
-                {!expert.avatar_url &&
-                  expert.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .slice(0, 2)
-                    .join("")}
+              <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-muted text-center text-xs font-semibold flex items-center justify-center text-[var(--sage)]">
+                {expert.avatar_url ? (
+                  <img
+                    src={expert.avatar_url}
+                    alt={expert.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span>
+                    {expert.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .slice(0, 2)
+                      .join("")}
+                  </span>
+                )}
               </div>
               <div className="min-w-0 flex-1 text-xs">
                 <div className="font-semibold text-foreground">
@@ -191,7 +194,27 @@ function MythPage() {
       {/* RELATED */}
       <section className="mx-auto max-w-[680px] px-5 py-12">
         <h2 className="text-xl">{t("myth.related")}</h2>
-        {(relatedQ.data?.length ?? 0) === 0 ? (
+        {relatedQ.isLoading ? (
+          <div className="mt-5 grid gap-5 sm:grid-cols-2">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div key={i} className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-4 animate-pulse" style={{ borderLeft: "4px solid #C0392B" }}>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className="h-5 w-5/6" />
+                </div>
+                <div className="flex items-center gap-2 opacity-50">
+                  <span className="h-px flex-1 bg-muted" />
+                  <span className="text-[10px] text-muted-foreground">✦</span>
+                  <span className="h-px flex-1 bg-muted" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-16 bg-sage/10" />
+                  <Skeleton className="h-5 w-5/6 bg-sage/10" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (relatedQ.data?.length ?? 0) === 0 ? (
           <p className="mt-3 text-sm text-muted-foreground">—</p>
         ) : (
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
