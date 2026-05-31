@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { ChevronRight, MessageCircle, MessageSquare, ThumbsUp, ThumbsDown, ShieldCheck, ExternalLink } from "lucide-react";
 import { useI18n, type Lang } from "@/lib/i18n";
@@ -9,6 +9,16 @@ import type { Article, Expert } from "@/lib/site-settings";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 
+function cleanSlug(slug: string): string {
+  if (!slug) return "";
+  let cleaned = slug.replace(/[`\s]+/g, "");
+  if (cleaned.includes("/")) {
+    const parts = cleaned.split("/");
+    cleaned = parts[parts.length - 1];
+  }
+  return cleaned;
+}
+
 const pick = (lang: Lang, hi?: string | null, en?: string | null) =>
   (lang === "hi" ? hi || en : en || hi) || "";
 
@@ -17,6 +27,15 @@ export const Route = createFileRoute("/learn/$category/$slug")({
     if (!getCategory(params.category)) throw notFound();
   },
   loader: async ({ params }) => {
+    const cleaned = cleanSlug(params.slug);
+    if (cleaned !== params.slug && cleaned !== "") {
+      throw redirect({
+        to: "/learn/$category/$slug",
+        params: { category: params.category, slug: cleaned },
+        statusCode: 301,
+      });
+    }
+
     const { data, error } = await supabase
       .from("articles")
       .select("*, experts(*)")
