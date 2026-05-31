@@ -290,20 +290,9 @@ function Index() {
                   {(a.excerpt || a.excerpt_hi) && (
                     <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{pick(lang, a.excerpt_hi, a.excerpt)}</p>
                   )}
-                  {a.slug && a.category ? (
-                    <Link
-                      to="/learn/$category/$slug"
-                      params={{ category: a.category, slug: a.slug }}
-                      className="mt-3 inline-flex items-center gap-1 text-xs font-semibold"
-                      style={{ color: "var(--terracotta)" }}
-                    >
-                      {t("home.featured.read")} <ArrowRight className="h-3 w-3" />
-                    </Link>
-                  ) : (
-                    <Link to="/learn" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold" style={{ color: "var(--terracotta)" }}>
-                      {t("home.featured.read")} <ArrowRight className="h-3 w-3" />
-                    </Link>
-                  )}
+                  <Link to="/learn" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold" style={{ color: "var(--terracotta)" }}>
+                    {t("home.featured.read")} <ArrowRight className="h-3 w-3" />
+                  </Link>
                 </div>
               </article>
             ))

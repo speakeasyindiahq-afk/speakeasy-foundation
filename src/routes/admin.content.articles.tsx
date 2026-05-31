@@ -55,21 +55,7 @@ function ArticlesAdmin() {
       .filter((s) => s.title && s.url);
     const { sources_text, experts: _experts, ...rest } = draft;
     void sources_text; void _experts;
-
-    // Sanitize slug before saving
-    let sanitizedSlug = rest.slug ? rest.slug.replace(/[`\s]+/g, "") : null;
-    if (sanitizedSlug && sanitizedSlug.includes("/")) {
-      const parts = sanitizedSlug.split("/");
-      sanitizedSlug = parts[parts.length - 1];
-    }
-    if (sanitizedSlug) {
-      sanitizedSlug = sanitizedSlug
-        .toLowerCase()
-        .replace(/[^a-z0-9-]+/g, "-")
-        .replace(/^-|-$/g, "");
-    }
-
-    const payload = { ...rest, slug: sanitizedSlug || null, sources, updated_at: new Date().toISOString() };
+    const payload = { ...rest, sources, updated_at: new Date().toISOString() };
     const { error } = await supabase.from("articles").upsert(payload);
     if (error) setMsg(error.message); else { setMsg("Saved."); await refresh(); }
     setSaving(false);
