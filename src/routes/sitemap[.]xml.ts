@@ -21,7 +21,6 @@ export const Route = createFileRoute("/sitemap.xml")({
             "/learn",
             "/myth",
             "/audio",
-            "/search",
           ];
 
           // 2. Fetch dynamic paths from Supabase
