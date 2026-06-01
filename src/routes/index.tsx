@@ -269,33 +269,61 @@ function Index() {
               </div>
             ))
           ) : (
-            (articlesQ.data ?? placeholderArticles).map((a) => (
-              <article
-                key={a.id}
-                className="min-w-[260px] flex-1 overflow-hidden rounded-2xl border border-border bg-card shadow-sm sm:min-w-0"
-              >
-                <div className="aspect-[16/10] w-full overflow-hidden bg-[color-mix(in_oklab,var(--terracotta)_12%,var(--ivory))]">
-                  {a.cover_url && (
-                    <img
-                      src={a.cover_url}
-                      alt={pick(lang, a.title_hi, a.title)}
-                      className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-                      loading="lazy"
-                    />
-                  )}
-                </div>
-                <div className="p-4">
-                  {a.category && <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "var(--terracotta)" }}>{a.category}</span>}
-                  <h3 className="mt-1 text-base font-semibold leading-snug">{pick(lang, a.title_hi, a.title)}</h3>
-                  {(a.excerpt || a.excerpt_hi) && (
-                    <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{pick(lang, a.excerpt_hi, a.excerpt)}</p>
-                  )}
-                  <Link to="/learn" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold" style={{ color: "var(--terracotta)" }}>
-                    {t("home.featured.read")} <ArrowRight className="h-3 w-3" />
+            (articlesQ.data ?? placeholderArticles).map((a) => {
+              const hasLink = !!(a.category && a.slug);
+              const CardContent = (
+                <>
+                  <div className="aspect-[16/10] w-full overflow-hidden bg-[color-mix(in_oklab,var(--terracotta)_12%,var(--ivory))]">
+                    {a.cover_url && (
+                      <img
+                        src={a.cover_url}
+                        alt={pick(lang, a.title_hi, a.title)}
+                        className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                        loading="lazy"
+                      />
+                    )}
+                  </div>
+                  <div className="p-4">
+                    {a.category && <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "var(--terracotta)" }}>{a.category}</span>}
+                    <h3 className="mt-1 text-base font-semibold leading-snug">{pick(lang, a.title_hi, a.title)}</h3>
+                    {(a.excerpt || a.excerpt_hi) && (
+                      <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{pick(lang, a.excerpt_hi, a.excerpt)}</p>
+                    )}
+                    {hasLink ? (
+                      <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold" style={{ color: "var(--terracotta)" }}>
+                        {t("home.featured.read")} <ArrowRight className="h-3 w-3" />
+                      </span>
+                    ) : (
+                      <Link to="/learn" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold" style={{ color: "var(--terracotta)" }}>
+                        {t("home.featured.read")} <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    )}
+                  </div>
+                </>
+              );
+
+              if (hasLink) {
+                return (
+                  <Link
+                    key={a.id}
+                    to="/learn/$category/$slug"
+                    params={{ category: a.category!, slug: a.slug! }}
+                    className="min-w-[260px] flex-1 overflow-hidden rounded-2xl border border-border bg-card shadow-sm sm:min-w-0"
+                  >
+                    {CardContent}
                   </Link>
-                </div>
-              </article>
-            ))
+                );
+              }
+
+              return (
+                <article
+                  key={a.id}
+                  className="min-w-[260px] flex-1 overflow-hidden rounded-2xl border border-border bg-card shadow-sm sm:min-w-0"
+                >
+                  {CardContent}
+                </article>
+              );
+            })
           )}
         </div>
       </section>
@@ -325,22 +353,38 @@ function Index() {
             </div>
           ) : (() => {
             const m = mythQ.data ?? placeholderMyth;
+            const Inner = (
+              <div className="grid sm:grid-cols-2">
+                <div className="p-6" style={{ backgroundColor: "color-mix(in oklab, var(--destructive) 8%, transparent)" }}>
+                  <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-destructive">❌ {t("home.myth.myth")}</span>
+                  <p className="mt-3 text-lg leading-snug" style={{ fontFamily: "var(--font-display)" }}>
+                    {pick(lang, m.myth_hi, m.myth)}
+                  </p>
+                </div>
+                <div className="p-6" style={{ backgroundColor: "color-mix(in oklab, var(--sage) 10%, transparent)" }}>
+                  <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider" style={{ color: "var(--sage)" }}>✅ {t("home.myth.fact")}</span>
+                  <p className="mt-3 text-lg leading-snug" style={{ fontFamily: "var(--font-display)" }}>
+                    {pick(lang, m.fact_hi, m.fact)}
+                  </p>
+                </div>
+              </div>
+            );
+
+            if (m.slug) {
+              return (
+                <Link
+                  to="/myth/$slug"
+                  params={{ slug: m.slug }}
+                  className="mt-4 block overflow-hidden rounded-3xl border border-border bg-card shadow-sm"
+                >
+                  {Inner}
+                </Link>
+              );
+            }
+
             return (
               <div className="mt-4 overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
-                <div className="grid sm:grid-cols-2">
-                  <div className="p-6" style={{ backgroundColor: "color-mix(in oklab, var(--destructive) 8%, transparent)" }}>
-                    <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-destructive">❌ {t("home.myth.myth")}</span>
-                    <p className="mt-3 text-lg leading-snug" style={{ fontFamily: "var(--font-display)" }}>
-                      {pick(lang, m.myth_hi, m.myth)}
-                    </p>
-                  </div>
-                  <div className="p-6" style={{ backgroundColor: "color-mix(in oklab, var(--sage) 10%, transparent)" }}>
-                    <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider" style={{ color: "var(--sage)" }}>✅ {t("home.myth.fact")}</span>
-                    <p className="mt-3 text-lg leading-snug" style={{ fontFamily: "var(--font-display)" }}>
-                      {pick(lang, m.fact_hi, m.fact)}
-                    </p>
-                  </div>
-                </div>
+                {Inner}
               </div>
             );
           })()}
@@ -388,7 +432,12 @@ function Index() {
             ))
           ) : (
             (audioQ.data ?? placeholderAudio).map((ep) => (
-              <article key={ep.id} className="min-w-[240px] flex-1 rounded-2xl border border-border bg-card p-4 shadow-sm sm:min-w-0">
+              <Link
+                key={ep.id}
+                to="/audio/$slug"
+                params={{ slug: ep.slug ?? ep.id }}
+                className="min-w-[240px] flex-1 rounded-2xl border border-border bg-card p-4 shadow-sm sm:min-w-0 block"
+              >
                 <div className="flex items-center gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: "var(--terracotta)" }}>
                     <Play className="h-5 w-5" />
@@ -403,7 +452,7 @@ function Index() {
                   </div>
                 </div>
                 {ep.description && <p className="mt-3 text-xs text-muted-foreground line-clamp-2">{ep.description}</p>}
-              </article>
+              </Link>
             ))
           )}
         </div>
