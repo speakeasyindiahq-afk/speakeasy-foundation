@@ -462,7 +462,7 @@ function parseMarkdownToBlocks(body: string): React.ReactNode[] {
   const lines = (body || "").replace(/\r\n/g, "\n").split("\n");
   const elements: React.ReactNode[] = [];
 
-  let currentBlockType: "paragraph" | "blockquote" | "insight" | "list" | null = null;
+  let currentBlockType: "paragraph" | "blockquote" | "insight" | "list" | "table" | null = null;
   let accumulatedLines: string[] = [];
   let accumulatedListItems: ListItem[] = [];
 
@@ -512,6 +512,87 @@ function parseMarkdownToBlocks(body: string): React.ReactNode[] {
           {renderListTree(accumulatedListItems)}
         </div>
       );
+    } else if (currentBlockType === "table") {
+      const tableRows: string[][] = [];
+      let alignments: ("left" | "center" | "right" | undefined)[] = [];
+      let headerCells: string[] = [];
+
+      for (let j = 0; j < accumulatedLines.length; j++) {
+        const line = accumulatedLines[j];
+        const trimmed = line.trim();
+        
+        const isSeparator = /^[|\s:-]+$/.test(trimmed) && trimmed.includes("-");
+        
+        let cells = line.split("|").map(c => c.trim());
+        if (line.startsWith("|")) {
+          cells.shift();
+        }
+        if (line.endsWith("|") && cells.length > 0 && cells[cells.length - 1] === "") {
+          cells.pop();
+        }
+
+        if (isSeparator) {
+          alignments = cells.map(col => {
+            if (col.startsWith(":") && col.endsWith(":")) return "center";
+            if (col.startsWith(":")) return "left";
+            if (col.endsWith(":")) return "right";
+            return undefined;
+          });
+        } else {
+          if (headerCells.length === 0 && j === 0) {
+            headerCells = cells;
+          } else {
+            tableRows.push(cells);
+          }
+        }
+      }
+
+      const columnCount = Math.max(headerCells.length, alignments.length);
+      for (let k = alignments.length; k < columnCount; k++) {
+        alignments[k] = undefined;
+      }
+
+      elements.push(
+        <div key={blockKey} className="w-full overflow-x-auto my-6 rounded-2xl border border-border bg-card/30 shadow-sm">
+          <table className="w-full border-collapse text-left text-sm text-foreground/90">
+            {headerCells.length > 0 && (
+              <thead className="bg-muted/50 border-b border-border/70">
+                <tr>
+                  {alignments.map((_, idx) => {
+                    const cell = headerCells[idx] || "";
+                    const align = alignments[idx];
+                    const alignClass = align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left";
+                    return (
+                      <th
+                        key={idx}
+                        className={`px-4 py-3.5 font-bold text-foreground text-xs uppercase tracking-wider ${alignClass}`}
+                      >
+                        {parseInline(cell)}
+                      </th>
+                    );
+                  })}
+                </tr>
+              </thead>
+            )}
+            <tbody className="divide-y divide-border/30">
+              {tableRows.map((row, rIdx) => (
+                <tr key={rIdx} className="hover:bg-muted/20 transition-colors">
+                  {alignments.map((_, cIdx) => {
+                    const cell = row[cIdx] || "";
+                    const align = alignments[cIdx];
+                    const alignClass = align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left";
+                    return (
+                      <td key={cIdx} className={`px-4 py-3.5 leading-relaxed ${alignClass}`}>
+                        {parseInline(cell)}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
     }
 
     currentBlockType = null;
@@ -559,6 +640,15 @@ function parseMarkdownToBlocks(body: string): React.ReactNode[] {
         currentBlockType = "insight";
       }
       accumulatedLines.push(trimmedLine.slice(3));
+      continue;
+    }
+
+    if (trimmedLine.startsWith("|")) {
+      if (currentBlockType !== "table") {
+        closeCurrentBlock();
+        currentBlockType = "table";
+      }
+      accumulatedLines.push(line);
       continue;
     }
 
