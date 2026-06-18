@@ -12,12 +12,17 @@ const pick = (lang: Lang, hi?: string | null, en?: string | null) =>
 
 export const Route = createFileRoute("/audio/$slug")({
   loader: async ({ params }) => {
-    const { data, error } = await supabase
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(params.slug);
+    const query = supabase
       .from("audio_episodes")
       .select("*, experts(*)")
-      .or(`slug.eq.${params.slug},id.eq.${params.slug}`)
-      .eq("status", "published")
-      .maybeSingle();
+      .eq("status", "published");
+
+    const { data, error } = await (isUuid
+      ? query.or(`slug.eq.${params.slug},id.eq.${params.slug}`)
+      : query.eq("slug", params.slug)
+    ).maybeSingle();
+
     if (error || !data) throw notFound();
     return { ep: data as AudioEpisode & { experts?: Expert | null } };
   },
